@@ -1,0 +1,779 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  STAFF
+  STUDENT
+  MOTHER
+  FATHER
+}
+
+enum TransactionStatus {
+  PENDING
+  DELIVERED
+  SUCCESS
+  APPROVED
+}
+
+enum ActivityType {
+  LOGIN
+  LOGOUT
+  UPDATE_PROFILE
+  CREATE_RECORD
+  DELETE_RECORD
+  TRANSFER_FUNDS
+  SUBMIT_ASSIGNMENT
+  CREATE_ASSIGNMENT
+  RECORD_ASSIGNMENT
+  CHECK_ASSIGNMENT
+  CREATE_EXERCISE
+  RECORD_EXERCISE
+  CHECK_EXERCISE
+  MAKE_PAYMENT
+  ADD_COMMENT
+  DELETE_COMMENT
+  SEND_MESSAGE
+  RECEIVE_MESSAGE
+  CREATED_STAFF
+  NEW_ADMISSION
+  CREATED_CLASS
+  CLEAR_CLASS_REP
+  CREATED_POOL
+  OTHER
+}
+
+enum TransactionMode {
+  CASH
+  CHEQUE
+  ONLINE
+}
+
+enum TransactionType {
+  BILL
+  PAYMENT
+  REFUND
+  TRANSFER
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum Permissions {
+  AddStudentInfo
+  EditStudentInfo
+  ViewStudentInfo
+  AddStaffInfo
+  EditStaffInfo
+  ViewStaffInfo
+  SetStaffPermission
+  CreateBill
+  EditBill
+  DeleteBill
+  ConfirmTransaction
+  EditTransaction
+  PrintTransaction
+  ViewTransaction
+  DeleteTransaction
+  MakePayment
+  Blocked
+  Stopped
+  SendMessage
+  CreateAlert
+  ADMIN
+  SUPERADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum BillStatus {
+  UNPAID
+  PAID
+  OVERDUE
+}
+
+enum PaymentsType {
+  ADMISSION
+  CANTEEN
+  TUITION
+  LIBRARY
+  SPORTS
+  OTHER
+}
+
+enum AssessmentType {
+  EXERCISE
+  ASSIGNMENT
+  PROJECTWORK
+  EXAM
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+  LONG_ANSWER
+  IMAGE
+}
+
+model User {
+  id                      Int         @id @default(autoincrement())
+  email                   String?     @unique
+  account                 AccountType
+  password                String
+  phoneNumber             String?     @unique
+  lastSeen                DateTime
+  loginAttempts           Int         @default(0)
+  active                  Boolean     @default(true)
+  passwordVerificationKey String      @default(cuid())
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+  student                 Student?
+  staff                   Staff?
+  mother                  Mother?
+  father                  Father?
+
+  @@index([id])
+  @@index([id, email])
+}
+
+enum StudentType {
+  DAY
+  BOARDING
+}
+
+enum EDBillEvents {
+  ADMISSION
+  ATTENDANCE
+  ID_PRINTING
+  NOTE_USAGE
+}
+
+model EDBIll {
+  id           String        @id @default(cuid())
+  title        String
+  classes      String[]      @default([])
+  amount       Int
+  forStudent   StudentType?
+  event        EDBillEvents
+  billItems    BillItem[]
+  transactions Transaction[]
+  termId       String
+  term         Term          @relation(fields: [termId], references: [id])
+  classId      String
+  class        Class         @relation(fields: [classId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Student {
+  id             String                 @id @default(cuid())
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime
+  gender         Gender
+  address        String
+  phoneNumber    String?
+  type           StudentType
+  emailAddress   String
+  enrollmentDate DateTime
+  balance        Float                  @default(0.0)
+  guardianName   String
+  guardianPhone  String
+  completed      Boolean                @default(false)
+  stopped        Boolean                @default(false)
+  guardianEmail  String?
+  isClassPrefect Boolean                @default(false)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  user           User?                  @relation(fields: [userId], references: [id])
+  userId         Int?                   @unique
+  class          Class                  @relation(fields: [classId], references: [id])
+  classId        String
+  classPrefect   Class?                 @relation("ClassPrefect", fields: [classPId], references: [id])
+  classPId       String?                @unique
+  images         Images[]
+  mother         Mother                 @relation(fields: [mothersId], references: [id])
+  mothersId      String
+  father         Father                 @relation(fields: [fathersId], references: [id])
+  fathersId      String
+  termId         String?
+  term           Term?                  @relation(fields: [termId], references: [id])
+  attendance     Attendance[]
+  projectworks   StudentOnProjectWork[]
+  exercises      StudentsOnExercise[]
+  assignments    StudentOnAssignment[]
+  submissions    Submission[]
+  transactions   Transaction[]
+  notifications  Notification[]
+  message        Messages[]
+  activities     ActivityLog[]
+
+  @@unique([id, classId, isClassPrefect])
+}
+
+enum StaffRole {
+  TEACHING
+  NON_TEACHING
+  ADMIN
+}
+
+model Staff {
+  id                String         @id @default(cuid())
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime
+  gender            Gender
+  balance           Float          @default(0.0)
+  address           String
+  phoneNumber       String         @unique
+  momoNumber        String?
+  emailAddress      String         @unique
+  dateOfEmployment  DateTime
+  salary            Float
+  bankName          String?
+  bankCode          String?
+  bankBranch        String?
+  bankAccountNumber String?
+  bankAccountBranch String?
+  ssnit             String?        @unique
+  emergencyContact  String
+  emergencyName     String
+  role              StaffRole
+  departmentId      String?
+  department        Department?    @relation(fields: [departmentId], references: [id])
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  user              User?          @relation(fields: [userId], references: [id])
+  userId            Int?           @unique
+  formMaster        Class?         @relation(fields: [formMasterId], references: [id])
+  formMasterId      String?        @unique
+  permissions       Permission[]
+  images            Images[]
+  attendance        Attendance[]
+  subjects          Subject[]
+  exercises         Exercise[]
+  assignments       Assignment[]
+  projectWorks      ProjectWork[]
+  notes             Note[]
+  transactions      Transaction[]
+  messages          Messages[]
+  notifications     Notification[]
+  activities        ActivityLog[]
+  enquiries         Enquiry[]
+  expenses          Expenditure[]
+}
+
+model Images {
+  id          String   @id @default(cuid())
+  fileName    String
+  fileType    String
+  isProfile   Boolean
+  isCoverPic  Boolean
+  fileSize    Int // Size in bytes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String?
+  student     Student? @relation(fields: [studentId], references: [id])
+  studentId   String?
+  staff       Staff?   @relation(fields: [staffId], references: [id])
+  staffId     String?
+  mother      Mother?  @relation(fields: [mothersId], references: [id])
+  mothersId   String?
+  father      Father?  @relation(fields: [fathersId], references: [id])
+  fathersId   String?
+
+  @@index([id])
+}
+
+model Class {
+  id           String    @id @default(cuid())
+  className    String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  disabled     Boolean   @default(false)
+  students     Student[]
+  classPrefect Student?  @relation("ClassPrefect")
+  formMaster   Staff?
+  subjects     Subject[]
+  edbills      EDBIll[]
+}
+
+model Transaction {
+  id                 String            @id @default(cuid())
+  transactionMode    TransactionMode?
+  transactionType    TransactionType
+  amount             Float
+  payment_info       String
+  currency           String
+  status             TransactionStatus
+  transactionDate    DateTime          @default(now())
+  referenceNumber    String?
+  previousBalance    Float
+  ref                Int               @default(autoincrement())
+  remarks            String?
+  transactionFee     Float
+  paymentMethod      String?
+  confirmationStatus Boolean           @default(false)
+  staffId            String
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  termId             String
+  term               Term              @relation(fields: [termId], references: [id])
+  Mother             Mother?           @relation(fields: [motherId], references: [id])
+  motherId           String?
+  Father             Father?           @relation(fields: [fatherId], references: [id])
+  fatherId           String?
+  studentId          String?
+  student            Student?          @relation(fields: [studentId], references: [id])
+  staff              Staff?            @relation(fields: [staffId], references: [id])
+  billId             String?
+  bill               Bill?             @relation(name: "bill", fields: [billId], references: [id])
+  edBillId           String?
+  edBill             EDBIll?           @relation(fields: [edBillId], references: [id])
+  payerName          String?
+  payerEmail         String?
+  billRef            Int?
+  billReference      Bill?             @relation(name: "billReference", fields: [billRef], references: [ref])
+  payerPhoneNumber   String?
+}
+
+model Department {
+  id    String  @id @default(cuid())
+  name  String
+  staff Staff[]
+}
+model Expenditure {
+  id   String @id @default(cuid())
+  title String
+  recipientName  String
+  description String
+  recipientPhoneNumber String
+  staffId String
+  approved Boolean @default(false)
+  amount Float
+  termId String
+  term Term @relation(fields: [termId],references: [id])
+  staff Staff @relation(fields: [staffId],references: [id]) 
+}
+model Permission {
+  id        String      @id @default(cuid())
+  type      Permissions
+  value     Boolean
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  staff     Staff       @relation(fields: [staffId], references: [id])
+  staffId   String
+
+  @@unique([type, staffId])
+}
+
+model Mother {
+  id            String         @id @default(cuid())
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime
+  phoneNumber   String
+  balance       Float          @default(0.0)
+  emailAddress  String?
+  address       String?
+  occupation    String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User?          @relation(fields: [userId], references: [id])
+  userId        Int?           @unique
+  images        Images[]
+  wards         Student[]
+  transactions  Transaction[]
+  notifications Notification[]
+  messages      Messages[]
+  activities    ActivityLog[]
+}
+
+model Father {
+  id            String         @id @default(cuid())
+  firstName     String
+  lastName      String
+  dateOfBirth   DateTime
+  phoneNumber   String
+  balance       Float          @default(0.0)
+  emailAddress  String? // Optional, if not always provided
+  address       String?
+  occupation    String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  user          User?          @relation(fields: [userId], references: [id])
+  userId        Int?           @unique
+  images        Images[]
+  wards         Student[]
+  transactions  Transaction[]
+  notifications Notification[]
+  messages      Messages[]
+  activities    ActivityLog[]
+}
+
+model Payments {
+  id        String       @id @default(cuid())
+  type      PaymentsType
+  amount    Float
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model ActivityLog {
+  id          String       @id @default(cuid())
+  type        ActivityType
+  description String? // Optional details about the activity
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  studentId   String?
+  student     Student?     @relation(fields: [studentId], references: [id])
+  staffId     String?
+  staff       Staff?       @relation(fields: [staffId], references: [id])
+  motherId    String?
+  mother      Mother?      @relation(fields: [motherId], references: [id])
+  fatherId    String?
+  father      Father?      @relation(fields: [fatherId], references: [id])
+}
+
+model Subject {
+  id              String            @id @default(cuid())
+  name            String
+  code            String            @unique
+  description     String?
+  isCore          Boolean           @default(false)
+  enable          Boolean           @default(true)
+  teacherId       String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  class           Class             @relation(fields: [classId], references: [id])
+  classId         String
+  staff           Staff             @relation(fields: [staffId], references: [id])
+  staffId         String
+  exercises       Exercise[]
+  assignment      Assignment[]
+  projectworks    ProjectWork[]
+  notes           Note[]
+  assessmentScore AssessmentScore[]
+  topics          Topic[]
+}
+
+enum Asstype {
+  ONLINE
+  OFFLINE
+}
+
+model Exercise {
+  id          String               @id @default(cuid())
+  title       String
+  type        Asstype
+  totalScore  Int
+  description String?
+  dueDate     DateTime
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  staff       Staff                @relation(fields: [staffId], references: [id])
+  staffId     String
+  subject     Subject              @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  student     StudentsOnExercise[]
+  questions   Question[]
+  submissions Submission[]
+  termId      String
+  term        Term                 @relation(fields: [termId], references: [id])
+}
+
+model StudentsOnExercise {
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId String
+  student    Student  @relation(fields: [studentId], references: [id])
+  studentId  String
+  assignedBy String
+  assignedAt DateTime @default(now())
+
+  @@id([studentId, exerciseId])
+}
+
+model StudentOnProjectWork {
+  projectwork   ProjectWork @relation(fields: [projectworkId], references: [id])
+  projectworkId String
+  student       Student     @relation(fields: [studentId], references: [id])
+  studentId     String
+  type          Asstype
+  assignedBy    String
+  assignedAt    DateTime    @default(now())
+
+  @@id([studentId, projectworkId])
+}
+
+model StudentOnAssignment {
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId String
+  student      Student    @relation(fields: [studentId], references: [id])
+  studentId    String
+  assignedBy   String
+  assignedAt   DateTime   @default(now())
+  @@id([studentId, assignmentId])
+}
+
+model ProjectWork {
+  id          String                 @id @default(cuid())
+  title       String
+  totalScore  Int
+  description String?
+  dueDate     DateTime
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  staff       Staff                  @relation(fields: [staffId], references: [id])
+  staffId     String
+  subject     Subject                @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  questions   Question[]
+  student     StudentOnProjectWork[]
+  submissions Submission[]
+  termId      String
+  term        Term                   @relation(fields: [termId], references: [id])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  staffId   String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  subjectId String
+  termId    String
+  term      Term     @relation(fields: [termId], references: [id])
+  topicId   String
+  topic     Topic    @relation(fields: [topicId], references: [id])
+}
+
+model Attendance {
+  id        String   @id @default(cuid())
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  staff     Staff    @relation(fields: [staffId], references: [id])
+  staffId   String
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  termId    String
+  term      Term     @relation(fields: [termId], references: [id])
+}
+
+model Examination {
+  id        String   @id @default(cuid())
+  title     String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  termId    String
+  term      Term     @relation(fields: [termId], references: [id])
+}
+
+model Assignment {
+  id          String                @id @default(cuid())
+  title       String
+  totalScore  Int
+  type        Asstype
+  description String?
+  dueDate     DateTime
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  staff       Staff                 @relation(fields: [staffId], references: [id])
+  staffId     String
+  subject     Subject               @relation(fields: [subjectId], references: [id])
+  subjectId   String
+  questions   Question[]
+  students    StudentOnAssignment[]
+  submissions Submission[]
+  termId      String
+  term        Term                  @relation(fields: [termId], references: [id])
+}
+
+model AssessmentScore {
+  id           String         @id @default(cuid())
+  score        Float // Score achieved by the student
+  maxScore     Float // Maximum possible score
+  type         AssessmentType // Type of assessment (exercise or assignment)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  subject      Subject        @relation(fields: [subjectId], references: [id])
+  subjectId    String
+  submission   Submission     @relation(fields: [submissionId], references: [id])
+  submissionId String         @unique
+}
+
+model Submission {
+  id              String           @id @default(cuid())
+  assessmentScore AssessmentScore?
+  assignment      Assignment       @relation(fields: [assignmentId], references: [id])
+  assignmentId    String
+  exercise        Exercise         @relation(fields: [exerciseId], references: [id])
+  exerciseId      String
+  projectwork     ProjectWork      @relation(fields: [projectworkId], references: [id])
+  projectworkId   String
+  student         Student          @relation(fields: [studentId], references: [id])
+  studentId       String
+  termId          String
+  term            Term             @relation(fields: [termId], references: [id])
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  notes       Note[]
+}
+
+model Question {
+  id            String           @id @default(cuid())
+  text          String // The text of the question
+  type          QuestionType // Type of the question (e.g., multiple-choice, true/false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  exercise      Exercise         @relation(fields: [exerciseId], references: [id])
+  exerciseId    String
+  assignment    Assignment       @relation(fields: [assignmentId], references: [id])
+  assignmentId  String
+  projectwork   ProjectWork      @relation(fields: [projectworkId], references: [id])
+  projectworkId String
+  options       QuestionOption[]
+}
+
+model QuestionOption {
+  id         String   @id @default(cuid())
+  text       String
+  isCorrect  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+}
+
+model Messages {
+  id        String    @id @default(cuid())
+  content   String // The content of the message
+  sentAt    DateTime  @default(now())
+  readAt    DateTime? // Timestamp when the message was read
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  by        String
+  studentId String?
+  student   Student?  @relation(references: [id], fields: [studentId])
+  staffId   String?
+  staff     Staff?    @relation(references: [id], fields: [staffId])
+  motherId  String?
+  mother    Mother?   @relation(references: [id], fields: [motherId])
+  fatherId  String?
+  father    Father?   @relation(references: [id], fields: [fatherId])
+}
+
+model Notification {
+  id        String      @id @default(cuid())
+  title     String
+  message   String
+  isRead    Boolean     @default(false) // Whether the notification has been read
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  fromType  AccountType
+  by        String
+  studentId String?
+  student   Student?    @relation(references: [id], fields: [studentId])
+  staffId   String?
+  staff     Staff?      @relation(references: [id], fields: [staffId])
+  motherId  String?
+  mother    Mother?     @relation(references: [id], fields: [motherId])
+  fatherId  String?
+  father    Father?     @relation(references: [id], fields: [fatherId])
+}
+
+model Enquiry {
+  id         String        @id @default(cuid())
+  subject    String // Subject or title of the enquiry
+  message    String // The content of the enquiry
+  status     EnquiryStatus // Status of the enquiry (e.g., new, in progress, resolved)
+  createdAt  DateTime      @default(now()) // Timestamp when the enquiry was created
+  updatedAt  DateTime      @updatedAt // Timestamp when the enquiry was last updated
+  resolvedAt DateTime? // Timestamp when the enquiry was resolved (optional)
+  response   String
+  staff      Staff?        @relation(fields: [staffId], references: [id])
+  staffId    String?
+}
+
+model Bill {
+  id          String        @id @default(cuid())
+  amount      Float // Total amount of the bill
+  dueDate     DateTime? // Due date for the bill payment
+  status      BillStatus // Status of the bill (e.g., unpaid, paid)
+  createdAt   DateTime      @default(now()) // Timestamp when the bill was created
+  updatedAt   DateTime      @updatedAt // Timestamp when the bill was last updated
+  payments    Transaction[] @relation(name: "billReference")
+  transaction Transaction[] @relation(name: "bill")
+  items       BillItem[]
+  termId      String
+  totalAmount Float
+  title       String
+  payedAmount Float
+  ref         Int           @unique @default(autoincrement())
+  term        Term          @relation(fields: [termId], references: [id])
+}
+
+model BillItem {
+  id        String   @id @default(cuid())
+  title     String // Description of the bill item
+  amount    Float
+  quantity  Int // Amount for the bill item
+  createdAt DateTime @default(now()) // Timestamp when the bill item was created
+  updatedAt DateTime @updatedAt // Timestamp when the bill item was last updated
+  delivered Boolean  @default(false)
+  billId    String?
+  bill      Bill?    @relation(fields: [billId], references: [id])
+  edbillId  String?
+  edbill    EDBIll?  @relation(fields: [edbillId], references: [id])
+}
+
+model Term {
+  id           String        @id @default(cuid())
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  exercise     Exercise[]
+  isActve      Boolean       @default(false)
+  projectworks ProjectWork[]
+  examination  Examination[]
+  assignment   Assignment[]
+  attendance   Attendance[]
+  transactions Transaction[]
+  notes        Note[]
+  submission   Submission[]
+  students     Student[]
+  bills        Bill[]
+  edbills      EDBIll[]
+  expenses     Expenditure[]
+}
