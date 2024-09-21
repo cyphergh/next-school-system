@@ -333,3 +333,19 @@ type TTransactions = {
   transactions?:CompleteTransactionType[];
   expenses?:Expenditure[];
 }
+
+type Post={
+  id:number;
+  title:string;
+  description:string;
+  image?:string;
+  likes:number;
+  reviews:PostReview[]
+}
+
+type PostReview ={
+  id:number;
+  name:string;
+  phone:string;
+  message:string;
+}
