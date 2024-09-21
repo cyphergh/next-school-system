@@ -1,26 +1,30 @@
 'use client' // Error boundaries must be Client Components
  
-import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
  
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
+  error: Error 
   reset: () => void
 }) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error)
+  }, [error])
+ 
   return (
-    <div className='flex flex-col w-full h-full gap-8 justify-center  flex-1 items-center text-center'>
-      <h2 className='text-xl text-red-500 font-bold'>{error.message}</h2>
-      <Button
+    <div>
+      <h2>Something went wrong!</h2>
+      <button
         onClick={
           // Attempt to recover by trying to re-render the segment
           () => reset()
         }
       >
         Try again
-      </Button>
+      </button>
     </div>
   )
 }

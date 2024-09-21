@@ -14,8 +14,7 @@ async function StaffInfo() {
   try {
     const res = await FindAllStaff();
     if (res.error) throw new Error(res.errorMessage);
-    if (!res.staffs || res.staffs.length < 1)
-      throw new Error("There is no other staff member to display");
+    if (!res.staffs ) throw Error("No staff available")
     staffs = res.staffs;
     let user = await getUser();
     if (!user || user.error || !user.user) return Error("Reload the page");

@@ -8,7 +8,7 @@ export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
+  error: Error 
   reset: () => void
 }) {
   return (
