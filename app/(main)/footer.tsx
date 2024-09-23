@@ -10,7 +10,7 @@ function WebFooter() {
           <p className="text-gray-400 mt-2 dark:text-gray-400">Amanfrom-Kumasi, Ghana</p>
           <p className="text-gray-400 dark:text-gray-400">Contact: +233244626639</p>
           <p className="text-gray-400 dark:text-gray-400">
-            Email: <a href="mailto:info@goldenheartacademy.online" className="text-white underline dark:text-gray-300 no-underline">info@goldenheartacademy.online</a>
+            Email: <a href="mailto:info@goldenheartacademy.online" className="text-white  dark:text-gray-300 no-underline">info@goldenheartacademy.online</a>
           </p>
         </div>
         <div className="text-center">

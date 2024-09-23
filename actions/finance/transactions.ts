@@ -43,10 +43,16 @@ export async function Transactions(): Promise<TTransactions> {
       },
     });
     const transactions = await prisma.transaction.findMany({
+      orderBy:{
+        createdAt:"desc"
+      },
       where: isSuperAdmin
-        ? {}
+        ? {
+          termId:term.id
+        }
         : {
             staffId: user.id,
+            termId:term.id,
           },
       include: {
         bill: {
@@ -68,9 +74,10 @@ export async function Transactions(): Promise<TTransactions> {
     });
     const expenses = await prisma.expenditure.findMany({
       where: isSuperAdmin
-        ? {}
+        ? {termId:term.id,}
         : {
             staffId: user.id,
+            termId:term.id,
           },
     });
     return { error: false, errorMessage: "", transactions, expenses };
