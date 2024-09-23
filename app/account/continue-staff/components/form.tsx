@@ -132,7 +132,7 @@ function ContinueStaffRegistrationForm({
             />
           )}
         </div>
-        <input
+        <Input
           name="profile"
           ref={imageRef}
           onChange={handleImageChange}
