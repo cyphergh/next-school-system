@@ -3,9 +3,6 @@
 @tailwind utilities;
 *{
   transition: all 0.2s;
-  user-select: none;
-  -moz-user-select: none;
-   -webkit-user-select: none;
    zoom: 1;
 }
 *::-webkit-scrollbar{
