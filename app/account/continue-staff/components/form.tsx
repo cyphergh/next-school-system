@@ -146,16 +146,12 @@ function ContinueStaffRegistrationForm({
           name="password"
           type="password"
           placeholder="Choose Password"
-          autoComplete="off"
-          className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:ring-blue-300"
         />
         <Input
           required
           name="confirmPassword"
           type="password"
           placeholder="Confirm Password"
-          autoComplete="off"
-          className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:ring-blue-300"
         />
 
         <h1>Bank Payment Method</h1>
