@@ -146,12 +146,14 @@ function ContinueStaffRegistrationForm({
           name="password"
           type="password"
           placeholder="Choose Password"
+          className="h-[40px]"
         />
         <Input
           required
           name="confirmPassword"
           type="password"
           placeholder="Confirm Password"
+          className="h-[40px]"
         />
 
         <h1>Bank Payment Method</h1>
