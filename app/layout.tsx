@@ -9,7 +9,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: process.env.SCHOOL,
   description: "school website",
-
+  viewport:{
+    userScalable:false,
+    width:"device-width",
+    initialScale:1,
+    maximumScale:1,
+    minimumScale:1,
+  }
 };
 
 export default function RootLayout({
@@ -19,7 +25,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en"  suppressHydrationWarning>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <body className={inter.className}>
       <ThemeProvider
             attribute="class"
