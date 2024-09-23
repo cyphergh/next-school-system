@@ -15,22 +15,22 @@ export async function GetStaffBasicInfoWithUser(
   id: string
 ): Promise<TGetStaffBasicInfoWithUser> {
   try {
-    // const url = "https://api.flutterwave.com/v3/banks/GH";
-    // const options = {
-    //   method: "GET",
-    //   headers: {
-    //     Authorization: "Bearer " + process.env.FLWSECK,
-    //   },
-    // };
-    // const response = await fetch(url, options);
-    // if (!response.ok) {
-    //   return { error: true, errorMessage: "Server server to load resource" };
-    // }
-    // const data = await response.json();
-    // const banks = data.data;
-    // if (!banks) {
-    //   return { error: true, errorMessage: "failed to load bank resource" };
-    // }
+    const url = "https://api.flutterwave.com/v3/banks/GH";
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + process.env.FLWSECK,
+      },
+    };
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      return { error: true, errorMessage: "Server server to load resource" };
+    }
+    const data = await response.json();
+    const banks = data.data;
+    if (!banks) {
+      return { error: true, errorMessage: "failed to load bank resource" };
+    }
     let staff = await prisma.staff.findUnique({
       where: {
         id,
@@ -40,7 +40,7 @@ export async function GetStaffBasicInfoWithUser(
       },
     });
     if (!staff) return { error: true, errorMessage: "Staff not found" };
-    return { error: false, staff, errorMessage: "", banks:[] };
+    return { error: false, staff, errorMessage: "", banks:banks };
   } catch (error) {
     return { error: true, errorMessage: "!Oops error occurred" };
   }
