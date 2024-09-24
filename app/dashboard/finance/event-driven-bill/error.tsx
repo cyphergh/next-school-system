@@ -15,7 +15,6 @@ export default function Error({
       <h2 className='text-xl text-red-500 font-bold'>{error.message}</h2>
       <Button
         onClick={
-          // Attempt to recover by trying to re-render the segment
           () => reset()
         }
       >

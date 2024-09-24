@@ -2,7 +2,7 @@ import { CompleteTransactionType } from "@/types";
 import React from "react";
 import { Card } from "../ui/card";
 
-function PaymentCard({
+function TransactionCard({
   transaction,
 }: {
   transaction: CompleteTransactionType;
@@ -33,4 +33,4 @@ function PaymentCard({
   );
 }
 
-export default PaymentCard;
+export default TransactionCard;

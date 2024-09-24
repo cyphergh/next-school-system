@@ -1,5 +1,5 @@
 "use client";
-import PaymentCard from "@/components/transactions/payment";
+import TransactionCard from "@/components/transactions/payment";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CompleteTransactionType } from "@/types";
@@ -19,15 +19,13 @@ function UI({
       <Card className="p-3">
         <Input placeholder="Search..."></Input>
       </Card>
-      <div className="p-4 flex-1 sm:flex sm:overflow-y-scroll sm:flex-wrap sm:content-start gap-2">
+      <div className="p-4 gap-y-3 w-full flex flex-col flex-1 sm:flex sm:flex-row sm:overflow-y-scroll sm:flex-wrap sm:content-start gap-2">
         {trans.map((t, i) => {
-          if (t.transactionType === "PAYMENT")
             return (
               <Link key={t.id} href={"./my-transactions/" + t.id}>
-                <PaymentCard transaction={t}></PaymentCard>;
+                <TransactionCard transaction={t}></TransactionCard>
               </Link>
             );
-          return <></>;
         })}
       </div>
     </div>

@@ -214,7 +214,7 @@ export async function CreateNewStudent(
               payment_info: "",
               paymentMethod: "",
               referenceNumber: "",
-              status: "SUCCESS",
+              status: "APPROVED",
               transactionType: "BILL",
               studentId: student.id,
               termId: term.id,

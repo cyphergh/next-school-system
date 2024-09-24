@@ -8,14 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: process.env.SCHOOL,
-  description: "school website",
-  viewport:{
-    userScalable:false,
-    width:"device-width",
-    initialScale:1,
-    maximumScale:1,
-    minimumScale:1,
-  }
+  description: `${process.env.SCHOOL} - ${process.env.SCHOOL_SHORT}`,
 };
 
 export default function RootLayout({

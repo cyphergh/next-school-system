@@ -53,7 +53,7 @@ export async function CreateEDBill({
         return { error: true, errorMessage: "Permission denied" };
     const result = await prisma.$transaction(async (prisma) => {
       const amount = items.reduce(
-        (sum, item) => sum + item.amount * item.quantity,
+        (sum, item) => sum + (item.amount * item.quantity),
         0
       );
       if (isNaN(amount)) throw new Error("Transaction Failed");

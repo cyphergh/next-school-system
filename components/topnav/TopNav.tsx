@@ -64,7 +64,7 @@ function TopNav({
   }
   if(loading) return <FullScreenLoading></FullScreenLoading>
   return (
-    <div className="w-full flex flex-row justify-between p-2 box-border items-center mt-2 shadow-sm shadow-slate-400 dark:shadow-md dark:shadow-gray-900">
+    <div className="w-full flex flex-row justify-between p-2 box-border items-center mt-2 shadow-sm h-auto shadow-slate-400 dark:shadow-md dark:shadow-gray-900">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex flex-row">
@@ -103,7 +103,7 @@ function TopNav({
           <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="pl-4 font-bold text-[10px] sm:text-lg">
+      <div className="pl-4 font-bold text-[10px] sm:text-lg h-auto pt-2">
         {p
           .split("/")
           [p.split("/").length - 2].replaceAll("-", " ")
