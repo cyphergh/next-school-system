@@ -7,7 +7,7 @@ async function TermPage() {
   let terms: Term[] = [];
   try {
     const res = await GetTerms();
-    if (res.error) throw  Error(res.errorMessage);
+    if (res.error) throw new Error(res.errorMessage);
     if (res.terms) terms = [...res.terms];
   } catch (error) {
     throw new Error("Connection Failed");
