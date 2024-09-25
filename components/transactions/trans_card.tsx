@@ -17,11 +17,11 @@ function TransactionCard({
             </div>
         <div className="flex flex-row gap-x-2">
             <div className="font-bold">Date</div>
-            <div>{transaction.createdAt.toLocaleDateString()}</div>
+            <div>{transaction.createdAt.toLocaleDateString("en-GB")}</div>
         </div>
         <div className="flex flex-row gap-x-2">
             <div className="font-bold">Time</div>
-            <div>{transaction.createdAt.toLocaleTimeString()}</div>
+            <div>{transaction.createdAt.toLocaleTimeString("en-GB")}</div>
         </div>
         <div className="flex flex-row gap-x-2">
             <div className="font-bold">Status</div>

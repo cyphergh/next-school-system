@@ -18,9 +18,9 @@ function UI({
 }) {
   const [transaction, setTransactions] =
     useState<CompleteTransactionType[]>(trans);
-  const [expenditure,setExpenditure] = useState(expenses);
+  const [expenditure, setExpenditure] = useState(expenses);
   const [reloading, setReloading] = useState(false);
-  const [type,setType] = useState<"BP"|"EP">("BP")
+  const [type, setType] = useState<"BP" | "EP">("BP");
   const handleReload = async () => {
     try {
       setReloading(true);
@@ -43,21 +43,27 @@ function UI({
         ></IoRefreshCircle>
         <div className="font-bold text-xl text-red-600 p-2">
           GH&#8373;{" "}
-          {!reloading? transaction
-            .filter(
-              (t) => t.transactionType === "PAYMENT" && t.status !== "APPROVED"
-            )
-            .reduce((a, b) => a + b.amount, 0)
-            .toFixed(2):"..."}
+          {!reloading
+            ? transaction
+                .filter(
+                  (t) =>
+                    t.transactionType === "PAYMENT" && t.status !== "APPROVED"
+                )
+                .reduce((a, b) => a + b.amount, 0)
+                .toFixed(2)
+            : "..."}
         </div>
         <div className="font-bold text-xl text-purple-600 p-2">
-          GH&#8373; {!reloading? expenditure.reduce((a, b) => a + b.amount, 0).toFixed(2):"..."}
+          GH&#8373;{" "}
+          {!reloading
+            ? expenditure.reduce((a, b) => a + b.amount, 0).toFixed(2)
+            : "..."}
         </div>
-        <select className="block w-full sm:w-auto px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-blue-500"
-        value={type}
-        onChange={(e)=>setType(e.target.value as "BP"|"EP")}
+        <select
+          className="block w-full sm:w-auto px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-blue-500"
+          value={type}
+          onChange={(e) => setType(e.target.value as "BP" | "EP")}
         >
-          
           <option value="BP">Bill And Payments</option>
           <option value="EP">Expenditure</option>
         </select>
@@ -71,13 +77,25 @@ function UI({
         <Input className="p-4 h-10" placeholder="Search..."></Input>
       </Card>
       <div className="p-4 gap-y-3 w-full flex flex-col flex-1 sm:flex sm:flex-row sm:overflow-y-scroll sm:flex-wrap sm:content-start gap-2">
-        {type==="BP"&& transaction.map((t, i) => {
-          return (
-            <Link key={t.id} href={"./my-transactions/" + t.id}>
-              <TransactionCard transaction={t}></TransactionCard>
-            </Link>
-          );
-        })}
+        {type === "BP" &&
+          transaction.map((t, i) => {
+            return (
+              <Link key={t.id} href={"./my-transactions/" + t.id}>
+                <TransactionCard transaction={t}></TransactionCard>
+              </Link>
+            );
+          })}
+        {type === "EP" &&
+          expenditure.map((t, i) => {
+            return (
+              <div key={t.id}>
+                <Card className="p-4">
+                <div className="font-bold text-lg"> GH&#8373; {t.amount}</div>
+                <div className="flex gap-x-2">Date <div>{t.createdAt.toLocaleDateString("en-GB")}</div></div>
+                </Card>
+              </div>
+            );
+          })}
       </div>
     </div>
   );
