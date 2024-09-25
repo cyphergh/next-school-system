@@ -24,8 +24,8 @@ function TransactionCard({
             <div>{transaction.createdAt.toLocaleTimeString()}</div>
         </div>
         <div className="flex flex-row gap-x-2">
-            <div className="font-bold">ID</div>
-            <div className="select-text">{transaction.id}</div>
+            <div className="font-bold">Status</div>
+            <div className="select-text">{transaction.status}</div>
         </div>
       </div>
       <div className={`w-[30px] h-[30px] rounded-full ${transaction.status==="SUCCESS"&&"bg-purple-900"} ${transaction.status==="APPROVED"&&"bg-green-600"} ${transaction.status==="PENDING"&&"bg-red-600"}`}></div>

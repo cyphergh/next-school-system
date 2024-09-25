@@ -1,7 +1,7 @@
 import prisma from "@/prisma/db";
 import { Metadata, ResolvingMetadata } from "next";
 import { notFound } from "next/navigation";
-import {PaymentPrintBar} from "./print_bar";
+import BillPrintBar, { PaymentPrintBar } from "./print_bar";
 type Props = {
   params: { id: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -76,7 +76,14 @@ export default async function Page({ params }: { params: { id: string } }) {
           <b>Amount</b>: GH&#8373;{transaction.amount}
         </p>
       </div>
-      <PaymentPrintBar></PaymentPrintBar>
+      {transaction.transactionType === "PAYMENT" && (
+        <PaymentPrintBar transaction={transaction}></PaymentPrintBar>
+      )}
+      
+      {transaction.transactionType === "BILL" && (
+        <BillPrintBar transaction={transaction}></BillPrintBar>
+      )}
+      
       {/* Transaction Information */}
       <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
         {transaction.transactionType === "PAYMENT" && (
