@@ -18,11 +18,11 @@ function NavItem({ nav }: { nav: NavItemType }) {
         <Link
           title={"" + nav.title}
           href={nav.link}
-          className={`flex flex-row p-2 w-full sm:hover:pb-2 sm:hover:pl-4 items-center lg:hover:pl-8 cursor-pointer hover:border-l-4 hover:border-blue-600 rounded-md mt-2 justify-between} ${
+          className={`flex flex-row p-1 w-full sm:hover:pb-2 sm:hover:pl-4 items-center lg:hover:pl-8 cursor-pointer hover:border-l-4 hover:border-blue-600 rounded-md mt-2 justify-between} ${
             path === nav.link ? "bg-blue-700 text-white" : ""
           }`}
         >
-          <div className="flex flex-row gap-x-4 items-center w-full overflow-hidden">
+          <div className="flex sm:flex-col lg:flex-row sm:hover:flex sm:text-[8px] lg:text-[14px] flex-row gap-x-4 items-center w-full overflow-hidden">
             <div>{nav.image}</div>
             <p className="lg:block overflow-x-hidden">{nav.title}</p>
           </div>
@@ -38,9 +38,10 @@ function NavItem({ nav }: { nav: NavItemType }) {
       }}
     >
       <div className="flex flex-row p-2 w-full items-center sm:hover:pb-2 lg:hover:pl-8 cursor-pointer hover:border-l-4 hover:border-blue-600 rounded-md mt-2 justify-between overflow-hidden">
-        <div className="flex flex-row gap-x-4 items-center  ">
+        <div className="flex flex-row sm:flex-col lg:flex-row sm:hover:flex sm:text-[8px] lg:text-[14px] gap-x-4 items-center  ">
           {nav.image}
-          <p className="lg:block overflow-hidden">{nav.title}</p>
+          
+          <p className="lg:block overflow-hidden font-bold font-mono">{nav.title}</p>
         </div>
       </div>
       <div

@@ -271,8 +271,8 @@ type StInfo = Prisma.StudentGetPayload<{
     user: {
       select: {
         password: false;
-        id:true,
-        lastSeen:true,
+        id: true;
+        lastSeen: true;
       };
     };
   };
@@ -280,72 +280,104 @@ type StInfo = Prisma.StudentGetPayload<{
 type StudentsInformation = {
   error: boolean;
   errorMessage: string;
-  students?:StInfo[];
+  students?: StInfo[];
 };
 
 type CompleteTransactionType = Prisma.TransactionGetPayload<{
-  include:{
-    bill:{
-      include:{
-        items:true,
-      }
-    },
-    Father:true,
-    Mother:true,
-    edBill:{
-      include:{
-        billItems:true
-      }
-    },
-    staff:true,
-    term:true,
-    student:true,
-  }
+  include: {
+    bill: {
+      include: {
+        items: true;
+      };
+    };
+    Father: true;
+    Mother: true;
+    edBill: {
+      include: {
+        billItems: true;
+      };
+    };
+    staff: true;
+    term: true;
+    student: true;
+    cancelationRequest: true;
+  };
 }>;
 
-type GetStudentTransactionsResponse ={
-  error:boolean;
-  errorMessage:string;
-  transactions?:CompleteTransactionType[];
-  balance:number;
-}
+type GetStudentTransactionsResponse = {
+  error: boolean;
+  errorMessage: string;
+  transactions?: CompleteTransactionType[];
+  balance: number;
+};
 
 type PaymentResponse = {
-  error:boolean;
-  errorMessage:string;
-  transactionId?:string;
-  students?:StInfo[];
-}
+  error: boolean;
+  errorMessage: string;
+  transactionId?: string;
+  students?: StInfo[];
+};
 
 type PassBillResponse = {
-  error:boolean;
-  errorMessage:string;
-}
-type TNewExpense ={
-  error:boolean;
-  errorMessage:string;
-
-}
+  error: boolean;
+  errorMessage: string;
+};
+type TNewExpense = {
+  error: boolean;
+  errorMessage: string;
+};
 
 type TTransactions = {
-  error:boolean;
-  errorMessage:string;
-  transactions?:CompleteTransactionType[];
-  expenses?:Expenditure[];
-}
+  error: boolean;
+  errorMessage: string;
+  transactions?: CompleteTransactionType[];
+  expenses?: CompleteExpenditure[];
+};
+type CompleteExpenditure = Prisma.ExpenditureGetPayload<{
+  include: {
+    cancelationRequest: true;
+  };
+}>;
+type Post = {
+  id: number;
+  title: string;
+  description: string;
+  image?: string;
+  likes: number;
+  reviews: PostReview[];
+};
 
-type Post={
-  id:number;
-  title:string;
-  description:string;
-  image?:string;
-  likes:number;
-  reviews:PostReview[]
-}
+type PostReview = {
+  id: number;
+  name: string;
+  phone: string;
+  message: string;
+};
 
-type PostReview ={
-  id:number;
-  name:string;
-  phone:string;
-  message:string;
-}
+type ExpenditureCancelationRequest = {
+  expenses?: CompleteExpenditure[];
+  error: boolean;
+  errorMessage: string;
+};
+
+type TransactionCancelationRequest = {
+  transactions?: CompleteTransactionType[];
+  error: boolean;
+  errorMessage: string;
+};
+
+type CompleteFinancialRequest = Prisma.FinancialCancelationRequestsGetPayload<{
+  include: {
+    expenditure: true;
+    staff: true;
+    transaction: true;
+  };
+}>;
+
+type FinancialRequestResponse = {
+  error: boolean;
+  errorMessage: string;
+  requests?: CompleteFinancialRequest[];
+};
+
+type Subject = Prisma.SubjectGetPayload<{ include: { class: true } }>;

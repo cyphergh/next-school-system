@@ -39,6 +39,9 @@ export async function GetStaffPaymentTransactions(): Promise<GetStudentTransacti
       where: {
         staffId: me.id,
         transactionType: "PAYMENT",
+        status:{
+          not:"CANCELED"
+        }
       },
       take: 100,
       include: {
@@ -57,6 +60,7 @@ export async function GetStaffPaymentTransactions(): Promise<GetStudentTransacti
         staff: true,
         term: true,
         student: true,
+        cancelationRequest: true,
       },
     });
     return { error: false, errorMessage: "", transactions, balance: 0 };

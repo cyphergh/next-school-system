@@ -17,6 +17,8 @@ import { SlCalender } from "react-icons/sl";
 import { HiUserGroup } from "react-icons/hi";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { MdOutlinePendingActions } from "react-icons/md";
+import { FaBook } from "react-icons/fa6";
 
 const navItems: NavItem[] = [
   {
@@ -143,18 +145,6 @@ const navItems: NavItem[] = [
     ],
     subMenu: [
       {
-        link: "/dashboard/finance/event-driven-bill",
-        hasSubMenu: false,
-        title: "ED Bill",
-        image: <CgEventbrite size={30} />        ,
-        permission: [
-          {
-            title: "CreateBill",
-            value:true
-          }
-        ],
-      },
-      {
         link: "/dashboard/finance/my-transactions",
         hasSubMenu: false,
         title: "Transactions",
@@ -166,6 +156,31 @@ const navItems: NavItem[] = [
           }
         ],
       },
+      {
+        link: "/dashboard/finance/requests",
+        hasSubMenu: false,
+        title: "X Requests",
+        image: <MdOutlinePendingActions size={30} />        ,
+        permission: [
+          {
+            title: "SUPERADMIN",
+            value:false
+          }
+        ],
+      },
+      {
+        link: "/dashboard/finance/event-driven-bill",
+        hasSubMenu: false,
+        title: "ED Bill",
+        image: <CgEventbrite size={30} />        ,
+        permission: [
+          {
+            title: "CreateBill",
+            value:true
+          }
+        ],
+      },
+     
       {
         link: "/dashboard/finance/payment",
         hasSubMenu: false,
@@ -251,6 +266,19 @@ const navItems: NavItem[] = [
           {
             title: "SUPERADMIN",
             value: true,
+          },
+        ],
+      },
+      {
+        link: "/dashboard/academics/my-class",
+        hasSubMenu: false,
+        title: "My Class",
+        image: <FaBook size={25} />
+        ,
+        permission: [
+          {
+            title: "Blocked",
+            value: false,
           },
         ],
       },

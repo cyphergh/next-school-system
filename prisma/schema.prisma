@@ -25,6 +25,7 @@ enum TransactionStatus {
   DELIVERED
   SUCCESS
   APPROVED
+  CANCELED
 }
 
 enum ActivityType {
@@ -280,6 +281,7 @@ model Staff {
   activities        ActivityLog[]
   enquiries         Enquiry[]
   expenses          Expenditure[]
+  cancelationRequests FinancialCancelationRequests[]
 }
 
 model Images {
@@ -354,6 +356,8 @@ model Transaction {
   billRef            Int?
   billReference      Bill?             @relation(name: "billReference", fields: [billRef], references: [ref])
   payerPhoneNumber   String?
+  cancelationRequest FinancialCancelationRequests? @relation(fields: [cancelationRequestId],references: [id])
+  cancelationRequestId String? @unique
 }
 
 model Department {
@@ -364,20 +368,36 @@ model Department {
   updatedAt DateTime @updatedAt
 }
 
+model FinancialCancelationRequests {
+  id            String       @id @default(cuid())
+  reason        String
+  expenditure   Expenditure? 
+  transaction   Transaction? 
+  granted       Boolean @default(false)
+  deniedReason  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  staffId       String
+  staff         Staff @relation(fields: [staffId],references: [id])
+}
+
 model Expenditure {
-  id                   String   @id @default(cuid())
+  id                   String                        @id @default(cuid())
   title                String
   recipientName        String
   description          String
   recipientPhoneNumber String
   staffId              String
-  approved             Boolean  @default(false)
+  approved             Boolean                       @default(false)
+  canceled             Boolean                       @default(false)
   amount               Float
   termId               String
-  term                 Term     @relation(fields: [termId], references: [id])
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-  staff                Staff    @relation(fields: [staffId], references: [id])
+  cancelationRequest   FinancialCancelationRequests? @relation(fields: [cancelationRequestId],references: [id])
+  cancelationRequestId String? @unique
+  term                 Term                          @relation(fields: [termId], references: [id])
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @updatedAt
+  staff                Staff                         @relation(fields: [staffId], references: [id])
 }
 
 model Permission {

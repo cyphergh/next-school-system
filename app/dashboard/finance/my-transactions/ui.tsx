@@ -1,6 +1,7 @@
 "use client";
 import { Transactions } from "@/actions/finance/transactions";
 import TransactionCard from "@/components/transactions/trans_card";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { CompleteTransactionType } from "@/types";
@@ -8,6 +9,8 @@ import { Expenditure } from "@prisma/client";
 import Link from "next/link";
 import React, { useState } from "react";
 import { IoRefreshCircle } from "react-icons/io5";
+import TCard from "./t_card";
+import ECard from "./e_card";
 
 function UI({
   trans,
@@ -21,6 +24,7 @@ function UI({
   const [expenditure, setExpenditure] = useState(expenses);
   const [reloading, setReloading] = useState(false);
   const [type, setType] = useState<"BP" | "EP">("BP");
+  const [search, setSearch] = useState<string>("");
   const handleReload = async () => {
     try {
       setReloading(true);
@@ -47,7 +51,10 @@ function UI({
             ? transaction
                 .filter(
                   (t) =>
-                    t.transactionType === "PAYMENT" && t.status !== "APPROVED"
+                    t.transactionType === "PAYMENT" &&
+                    t.status !== "APPROVED" &&
+                    t.status !== "CANCELED" &&
+                    !t.cancelationRequestId
                 )
                 .reduce((a, b) => a + b.amount, 0)
                 .toFixed(2)
@@ -56,7 +63,12 @@ function UI({
         <div className="font-bold text-xl text-purple-600 p-2">
           GH&#8373;{" "}
           {!reloading
-            ? expenditure.reduce((a, b) => a + b.amount, 0).toFixed(2)
+            ? expenditure
+                .filter(
+                  (t) => !t.approved && !t.canceled && !t.cancelationRequestId
+                )
+                .reduce((a, b) => a + b.amount, 0)
+                .toFixed(2)
             : "..."}
         </div>
         <select
@@ -67,35 +79,69 @@ function UI({
           <option value="BP">Bill And Payments</option>
           <option value="EP">Expenditure</option>
         </select>
-        <select className="block w-full sm:w-auto px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:outline-none focus:ring focus:border-blue-500 dark:focus:border-blue-500">
-          <option value="">All Transaction</option>
-          <option value="expenditure">Pending</option>
-          <option value="expenditure">Success</option>
-          <option value="expenditure">Approved</option>
-        </select>
-
-        <Input className="p-4 h-10" placeholder="Search..."></Input>
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="p-4 h-10"
+          placeholder="Search..."
+        ></Input>
       </Card>
       <div className="p-4 gap-y-3 w-full flex flex-col flex-1 sm:flex sm:flex-row sm:overflow-y-scroll sm:flex-wrap sm:content-start gap-2">
         {type === "BP" &&
-          transaction.map((t, i) => {
-            return (
-              <Link key={t.id} href={"./my-transactions/" + t.id}>
-                <TransactionCard transaction={t}></TransactionCard>
-              </Link>
-            );
-          })}
+          transaction
+            .filter((t) => {
+              let ret: boolean;
+              ret = (
+                t.amount.toString() +
+                " " +
+                t.transactionType.toLocaleLowerCase() +
+                " " +
+                t.payerName?.toLocaleLowerCase() +
+                " " +
+                t.payerEmail?.toLocaleLowerCase() +
+                " " +
+                t.student?.emailAddress.toLocaleLowerCase() +
+                " " +
+                t.student?.firstName.toLocaleLowerCase() +
+                " " +
+                t.student?.lastName.toLocaleLowerCase() +
+                " " +
+                t.createdAt.toLocaleDateString("en-GB")
+              ).includes(search.toLowerCase());
+
+              return ret;
+            })
+            .map((t, i) => {
+              return (
+                <TCard
+                  setTransactions={setTransactions}
+                  key={t.id}
+                  t={t}
+                ></TCard>
+              );
+            })}
         {type === "EP" &&
-          expenditure.map((t, i) => {
-            return (
-              <div key={t.id}>
-                <Card className="p-4">
-                <div className="font-bold text-lg"> GH&#8373; {t.amount}</div>
-                <div className="flex gap-x-2">Date <div>{t.createdAt.toLocaleDateString("en-GB")}</div></div>
-                </Card>
-              </div>
-            );
-          })}
+          expenditure
+            .filter((t) => {
+              let ret: boolean;
+              ret = (
+                t.amount.toString() +
+                " " +
+                t.createdAt.toLocaleDateString("en-GB") +
+                " " +
+                t.description.toLowerCase() +
+                " " +
+                t.recipientName.toLowerCase() +
+                " " +
+                t.recipientPhoneNumber.toLowerCase()
+              ).includes(search.toLowerCase());
+              return ret;
+            })
+            .map((t, i) => {
+              return (
+                <ECard t={t} setExpenditure={setExpenditure} key={t.id}></ECard>
+              );
+            })}
       </div>
     </div>
   );

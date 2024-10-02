@@ -43,6 +43,9 @@ export async function GetStudentTransactions(
       },
       where: {
         studentId,
+        status:{
+          not:"CANCELED"
+        }
       },
       take: 100,
       include: {
@@ -61,6 +64,7 @@ export async function GetStudentTransactions(
         staff: true,
         term: true,
         student:true,
+        cancelationRequest: true,
       },
     });
     return { error: false, errorMessage: "",transactions,balance:student.balance};

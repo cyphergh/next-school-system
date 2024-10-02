@@ -48,11 +48,17 @@ export async function Transactions(): Promise<TTransactions> {
       },
       where: isSuperAdmin
         ? {
-          termId:term.id
+          termId:term.id,
+          status:{
+            not:"CANCELED"
+          }
         }
         : {
             staffId: user.id,
             termId:term.id,
+            status:{
+              not:"CANCELED"
+            }
           },
       include: {
         bill: {
@@ -70,15 +76,19 @@ export async function Transactions(): Promise<TTransactions> {
         staff: true,
         term: true,
         student: true,
+        cancelationRequest:true,
       },
     });
     const expenses = await prisma.expenditure.findMany({
       where: isSuperAdmin
-        ? {termId:term.id,}
+        ? {termId:term.id}
         : {
             staffId: user.id,
             termId:term.id,
           },
+        include:{
+          cancelationRequest:true,
+        }
     });
     return { error: false, errorMessage: "", transactions, expenses };
   } catch (error: any) {

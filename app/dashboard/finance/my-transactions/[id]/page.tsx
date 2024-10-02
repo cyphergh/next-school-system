@@ -18,6 +18,9 @@ export async function generateMetadata(
   const trans = await prisma.transaction.findFirst({
     where: {
       id: id,
+      status:{
+        not:"CANCELED"
+      }
     },
   });
 
@@ -36,6 +39,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   const transaction = await prisma.transaction.findUnique({
     where: {
       id: params.id,
+      status:{
+        not:"CANCELED"
+      }
     },
     include: {
       bill: {
@@ -57,6 +63,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           class: true,
         },
       },
+      cancelationRequest: true,
     },
   });
   if (!transaction) return notFound();

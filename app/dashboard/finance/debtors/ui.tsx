@@ -183,10 +183,10 @@ function PrintDebtors({ students }: { students: StInfo }) {
                 &#8373; {students.balance}
               </p>
               <p className="text-lg uppercase">
-                {students.updatedAt.toLocaleDateString()}
+                {students.updatedAt.toLocaleDateString("en-GB")}
               </p>
               <p className="text-lg lowercase">
-                {students.updatedAt.toLocaleTimeString()}
+                {students.updatedAt.toLocaleTimeString("en-GB")}
               </p>
             </div>
           </div>

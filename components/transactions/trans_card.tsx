@@ -8,7 +8,7 @@ function TransactionCard({
   transaction: CompleteTransactionType;
 }) {
   return (
-    <Card className="w-full sm:w-[350px] p-4 flex flex-row justify-between items-center cursor-pointer hover:border hover:border-blue-400">
+    <div className="w-full sm:w-[350px] p-4 flex flex-row justify-between items-center ">
       <div>
         <div className="font-bold">{transaction.transactionType}</div>
         <div className="flex flex-row gap-x-2">
@@ -28,8 +28,8 @@ function TransactionCard({
             <div className="select-text">{transaction.status}</div>
         </div>
       </div>
-      <div className={`w-[30px] h-[30px] rounded-full ${transaction.status==="SUCCESS"&&"bg-purple-900"} ${transaction.status==="APPROVED"&&"bg-green-600"} ${transaction.status==="PENDING"&&"bg-red-600"}`}></div>
-    </Card>
+    {!transaction.cancelationRequest&& <div className={`w-[30px] h-[30px] rounded-full ${transaction.status==="SUCCESS"&&"bg-purple-900"} ${transaction.status==="APPROVED"&&"bg-green-600"} ${transaction.status==="PENDING"&&"bg-red-600"}`}></div>}
+    </div>
   );
 }
 
