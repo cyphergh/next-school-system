@@ -17,6 +17,7 @@ async function Page(
       class:true
     }
   });
+  console.log(subject)
   if(!subject) throw Error("Subject Not Found")
   const topics = await prisma.topic.findMany({
     orderBy: {
@@ -27,21 +28,9 @@ async function Page(
     },
     include:{
       notes:true,
-      exercises:{
-        include:{
-          _count:true
-        },
-      },
-      assignment:{
-        include:{
-          _count:true
-        }
-      },
-      projectworks:{
-        include:{
-          _count:true
-        }
-      },
+      exercises:true,
+      assignment:true,
+      projectworks:true,
       term:true,
     }
   })
