@@ -13,7 +13,6 @@ function UI({topics}:{topics:Topic[]}) {
           return (
               <Link href={"../notes/"+c.id} className="border p-4 block rounded-lg w-full h-[60px] sm:w-auto m-1" key={c.id}>
             <div className="font-bold capitalize">{c.title}</div>
-            <div className='capitalize text-red-600'>{c.id}</div>
           </Link>
         );
     })}
