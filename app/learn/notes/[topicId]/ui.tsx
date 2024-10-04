@@ -41,7 +41,7 @@ function UI({ notes }: { notes: Note[] }) {
       {notes
         .filter((e) => e.title.toLowerCase().includes(search.toLowerCase()))
         .map((e) => {
-          return <NoteCard e={e}></NoteCard>;
+          return <NoteCard key={e.id} e={e}></NoteCard>;
         })}
     </>
   );

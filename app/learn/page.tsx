@@ -31,7 +31,7 @@ async function Page() {
       <br></br>
       {classes.map((c) => {
         return (
-          <Link href={"learn/"+c.id} className="border p-4 block rounded-lg w-full h-16 sm:w-auto m-1">
+          <Link href={"learn/"+c.id} key={c.id} className="border p-4 block rounded-lg w-full h-16 sm:w-auto m-1">
             <div className="font-bold text-2xl uppercase">{c.className}</div>
           </Link>
         );
