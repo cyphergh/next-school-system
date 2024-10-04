@@ -287,7 +287,7 @@ const navItems: NavItem[] = [
   {
     link: "/dashboard/notification",
     hasSubMenu: true,
-    title: "Notifications",
+    title: "Alerts",
     image: <IoNotificationsOutline size={30} />,
     permission: [{
       title: "Blocked",

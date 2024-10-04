@@ -381,3 +381,42 @@ type FinancialRequestResponse = {
 };
 
 type Subject = Prisma.SubjectGetPayload<{ include: { class: true } }>;
+type Topic = Prisma.TopicGetPayload<{
+  include: {
+    notes: true;
+    exercises: {
+      include: {
+        _count: true;
+      };
+    };
+    assignment: {
+      include: {
+        _count: true;
+      };
+    };
+    projectworks: {
+      include: {
+        _count: true;
+      };
+    };
+    term:true,
+  };
+}>;
+type TTopicsResponse = {
+  error: boolean;
+  errorMessage: string;
+  topics: Topic[];
+};
+type Note = Prisma.NoteGetPayload<{
+  include:{
+    subject:true,
+    staff:true,
+    term:true,
+    topic:true,
+  }
+}>
+type TNewNote = {
+  error:boolean;
+  errorMessage:string;
+  notes:Note[]
+}

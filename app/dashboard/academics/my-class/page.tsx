@@ -30,9 +30,7 @@ async function Page() {
   if(!subjects) return <div className="flex-1 text-center">
     <h1>No subjects found</h1>
   </div>
-  return <div>
-    <UI subjects={subjects} />
-  </div>;
+  return <UI subjects={subjects} />
 }
 
 export default Page;

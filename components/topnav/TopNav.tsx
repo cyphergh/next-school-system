@@ -103,13 +103,23 @@ function TopNav({
           <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="pl-4 font-bold text-[10px] sm:text-lg h-auto pt-2">
+      <div className="pl-4 font-bold text-[10px] sm:text-lg h-auto pt-2 capitalize">
+      {p
+          .split("/")
+          [p.split("/").length - 1].replaceAll("-", " ")
+          .toUpperCase().length>10&& p
+          .split("/")
+          [p.split("/").length - 3].replaceAll("-", " ")
+          .toUpperCase()+" / "}
         {p
           .split("/")
           [p.split("/").length - 2].replaceAll("-", " ")
           .toUpperCase()}{" "}
         /{" "}
         {p
+          .split("/")
+          [p.split("/").length - 1].replaceAll("-", " ")
+          .toUpperCase().length<10&& p
           .split("/")
           [p.split("/").length - 1].replaceAll("-", " ")
           .toUpperCase()}

@@ -18,8 +18,8 @@ function NavItem({ nav }: { nav: NavItemType }) {
         <Link
           title={"" + nav.title}
           href={nav.link}
-          className={`flex flex-row p-1 w-full sm:hover:pb-2 sm:hover:pl-4 items-center lg:hover:pl-8 cursor-pointer hover:border-l-4 hover:border-blue-600 rounded-md mt-2 justify-between} ${
-            path === nav.link ? "bg-blue-700 text-white" : ""
+          className={`flex p-2 flex-row  w-full sm:hover:pb-2 sm:hover:pl-4 items-center lg:hover:pl-8 cursor-pointer hover:border-l-4 hover:border-blue-600 rounded-md mt-2 justify-between} ${
+            path.replace("/dashboard","").split("/")[2] === nav.link.replace("/dashboard","").split("/")[2] ? "bg-blue-700 text-white" : ""
           }`}
         >
           <div className="flex sm:flex-col lg:flex-row sm:hover:flex sm:text-[8px] lg:text-[14px] flex-row gap-x-4 items-center w-full overflow-hidden">

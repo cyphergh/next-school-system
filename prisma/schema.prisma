@@ -238,49 +238,49 @@ enum StaffRole {
 }
 
 model Staff {
-  id                String         @id @default(cuid())
-  firstName         String
-  lastName          String
-  dateOfBirth       DateTime
-  gender            Gender
-  balance           Float          @default(0.0)
-  address           String
-  phoneNumber       String         @unique
-  momoNumber        String?
-  emailAddress      String         @unique
-  dateOfEmployment  DateTime
-  salary            Float
-  bankName          String?
-  bankCode          String?
-  bankBranch        String?
-  bankAccountNumber String?
-  bankAccountBranch String?
-  ssnit             String?        @unique
-  emergencyContact  String
-  emergencyName     String
-  role              StaffRole
-  departmentId      String?
-  department        Department?    @relation(fields: [departmentId], references: [id])
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-  user              User?          @relation(fields: [userId], references: [id])
-  userId            Int?           @unique
-  formMaster        Class?         @relation(fields: [formMasterId], references: [id])
-  formMasterId      String?        @unique
-  permissions       Permission[]
-  images            Images[]
-  attendance        Attendance[]
-  subjects          Subject[]
-  exercises         Exercise[]
-  assignments       Assignment[]
-  projectWorks      ProjectWork[]
-  notes             Note[]
-  transactions      Transaction[]
-  messages          Messages[]
-  notifications     Notification[]
-  activities        ActivityLog[]
-  enquiries         Enquiry[]
-  expenses          Expenditure[]
+  id                  String                         @id @default(cuid())
+  firstName           String
+  lastName            String
+  dateOfBirth         DateTime
+  gender              Gender
+  balance             Float                          @default(0.0)
+  address             String
+  phoneNumber         String                         @unique
+  momoNumber          String?
+  emailAddress        String                         @unique
+  dateOfEmployment    DateTime
+  salary              Float
+  bankName            String?
+  bankCode            String?
+  bankBranch          String?
+  bankAccountNumber   String?
+  bankAccountBranch   String?
+  ssnit               String?                        @unique
+  emergencyContact    String
+  emergencyName       String
+  role                StaffRole
+  departmentId        String?
+  department          Department?                    @relation(fields: [departmentId], references: [id])
+  createdAt           DateTime                       @default(now())
+  updatedAt           DateTime                       @updatedAt
+  user                User?                          @relation(fields: [userId], references: [id])
+  userId              Int?                           @unique
+  formMaster          Class?                         @relation(fields: [formMasterId], references: [id])
+  formMasterId        String?                        @unique
+  permissions         Permission[]
+  images              Images[]
+  attendance          Attendance[]
+  subjects            Subject[]
+  exercises           Exercise[]
+  assignments         Assignment[]
+  projectWorks        ProjectWork[]
+  notes               Note[]
+  transactions        Transaction[]
+  messages            Messages[]
+  notifications       Notification[]
+  activities          ActivityLog[]
+  enquiries           Enquiry[]
+  expenses            Expenditure[]
   cancelationRequests FinancialCancelationRequests[]
 }
 
@@ -320,44 +320,44 @@ model Class {
 }
 
 model Transaction {
-  id                 String            @id @default(cuid())
-  transactionMode    TransactionMode?
-  transactionType    TransactionType
-  amount             Float
-  payment_info       String
-  currency           String
-  status             TransactionStatus
-  transactionDate    DateTime          @default(now())
-  referenceNumber    String?
-  previousBalance    Float
-  ref                Int               @default(autoincrement())
-  remarks            String?
-  transactionFee     Float
-  paymentMethod      String?
-  confirmationStatus Boolean           @default(false)
-  staffId            String
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  termId             String
-  term               Term              @relation(fields: [termId], references: [id])
-  Mother             Mother?           @relation(fields: [motherId], references: [id])
-  motherId           String?
-  Father             Father?           @relation(fields: [fatherId], references: [id])
-  fatherId           String?
-  studentId          String?
-  student            Student?          @relation(fields: [studentId], references: [id])
-  staff              Staff?            @relation(fields: [staffId], references: [id])
-  billId             String?
-  bill               Bill?             @relation(name: "bill", fields: [billId], references: [id])
-  edBillId           String?
-  edBill             EDBIll?           @relation(fields: [edBillId], references: [id])
-  payerName          String?
-  payerEmail         String?
-  billRef            Int?
-  billReference      Bill?             @relation(name: "billReference", fields: [billRef], references: [ref])
-  payerPhoneNumber   String?
-  cancelationRequest FinancialCancelationRequests? @relation(fields: [cancelationRequestId],references: [id])
-  cancelationRequestId String? @unique
+  id                   String                        @id @default(cuid())
+  transactionMode      TransactionMode?
+  transactionType      TransactionType
+  amount               Float
+  payment_info         String
+  currency             String
+  status               TransactionStatus
+  transactionDate      DateTime                      @default(now())
+  referenceNumber      String?
+  previousBalance      Float
+  ref                  Int                           @default(autoincrement())
+  remarks              String?
+  transactionFee       Float
+  paymentMethod        String?
+  confirmationStatus   Boolean                       @default(false)
+  staffId              String
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @updatedAt
+  termId               String
+  term                 Term                          @relation(fields: [termId], references: [id])
+  Mother               Mother?                       @relation(fields: [motherId], references: [id])
+  motherId             String?
+  Father               Father?                       @relation(fields: [fatherId], references: [id])
+  fatherId             String?
+  studentId            String?
+  student              Student?                      @relation(fields: [studentId], references: [id])
+  staff                Staff?                        @relation(fields: [staffId], references: [id])
+  billId               String?
+  bill                 Bill?                         @relation(name: "bill", fields: [billId], references: [id])
+  edBillId             String?
+  edBill               EDBIll?                       @relation(fields: [edBillId], references: [id])
+  payerName            String?
+  payerEmail           String?
+  billRef              Int?
+  billReference        Bill?                         @relation(name: "billReference", fields: [billRef], references: [ref])
+  payerPhoneNumber     String?
+  cancelationRequest   FinancialCancelationRequests? @relation(fields: [cancelationRequestId], references: [id])
+  cancelationRequestId String?                       @unique
 }
 
 model Department {
@@ -369,16 +369,16 @@ model Department {
 }
 
 model FinancialCancelationRequests {
-  id            String       @id @default(cuid())
-  reason        String
-  expenditure   Expenditure? 
-  transaction   Transaction? 
-  granted       Boolean @default(false)
-  deniedReason  String?
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  staffId       String
-  staff         Staff @relation(fields: [staffId],references: [id])
+  id           String       @id @default(cuid())
+  reason       String
+  expenditure  Expenditure?
+  transaction  Transaction?
+  granted      Boolean      @default(false)
+  deniedReason String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  staffId      String
+  staff        Staff        @relation(fields: [staffId], references: [id])
 }
 
 model Expenditure {
@@ -392,8 +392,8 @@ model Expenditure {
   canceled             Boolean                       @default(false)
   amount               Float
   termId               String
-  cancelationRequest   FinancialCancelationRequests? @relation(fields: [cancelationRequestId],references: [id])
-  cancelationRequestId String? @unique
+  cancelationRequest   FinancialCancelationRequests? @relation(fields: [cancelationRequestId], references: [id])
+  cancelationRequestId String?                       @unique
   term                 Term                          @relation(fields: [termId], references: [id])
   createdAt            DateTime                      @default(now())
   updatedAt            DateTime                      @updatedAt
@@ -525,6 +525,8 @@ model Exercise {
   submissions Submission[]
   termId      String
   term        Term                 @relation(fields: [termId], references: [id])
+  topic       Topic                @relation(fields: [topicId], references: [id])
+  topicId     String
 }
 
 model StudentsOnExercise {
@@ -578,6 +580,8 @@ model ProjectWork {
   submissions Submission[]
   termId      String
   term        Term                   @relation(fields: [termId], references: [id])
+  Topic       Topic?                 @relation(fields: [topicId], references: [id])
+  topicId     String?
 }
 
 model Note {
@@ -594,6 +598,7 @@ model Note {
   term      Term     @relation(fields: [termId], references: [id])
   topicId   String
   topic     Topic    @relation(fields: [topicId], references: [id])
+  @@unique([title,termId,subjectId])
 }
 
 model Attendance {
@@ -637,6 +642,8 @@ model Assignment {
   submissions Submission[]
   termId      String
   term        Term                  @relation(fields: [termId], references: [id])
+  topic       Topic                 @relation(fields: [topicId], references: [id])
+  topicId     String
 }
 
 model AssessmentScore {
@@ -668,14 +675,19 @@ model Submission {
 }
 
 model Topic {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  subjectId   String
-  subject     Subject  @relation(fields: [subjectId], references: [id])
-  notes       Note[]
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  subjectId    String
+  subject      Subject       @relation(fields: [subjectId], references: [id])
+  notes        Note[]
+  exercises    Exercise[]
+  termId      String
+  term        Term                 @relation(fields: [termId], references: [id])
+  assignment   Assignment[]
+  projectworks ProjectWork[]
 }
 
 model Question {
@@ -803,4 +815,5 @@ model Term {
   bills        Bill[]
   edbills      EDBIll[]
   expenses     Expenditure[]
+  topics       Topic[]
 }
