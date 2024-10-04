@@ -21,26 +21,6 @@ const topics = await prisma.topic.findMany({
     where:{
         subjectId:params.subjectId,
     },
-    include:{
-        notes:true,
-        subject:true,
-        exercises: {
-          include: {
-            _count: true,
-          },
-        },
-        assignment: {
-          include: {
-            _count: true,
-          },
-        },
-        projectworks: {
-          include: {
-            _count: true,
-          },
-        },
-        term:true,
-    }
 })
   return (
     <div className="sm:flex sm:flex-wrap sm:content-start  p-4  gap-4">
@@ -48,7 +28,6 @@ const topics = await prisma.topic.findMany({
       <Image src={Logo} alt="logo" className="w-[50%] sm:w-[200px] "></Image>
     </div>
     <div className="w-full">
-      {" "}
       <center>
         <h3 className="text-3xl">Select Topic</h3>
       </center>

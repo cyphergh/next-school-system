@@ -1,6 +1,6 @@
 'use client'
 import { Input } from '@/components/ui/input';
-import { Topic } from '@/types'
+import { Topic } from '@prisma/client';
 import Link from 'next/link';
 import React, { useState } from 'react'
 
@@ -13,8 +13,7 @@ function UI({topics}:{topics:Topic[]}) {
           return (
               <Link href={"../notes/"+c.id} className="border p-4 block rounded-lg w-full h-[120px] sm:w-auto m-1" key={c.id}>
             <div className="font-bold capitalize">{c.title}</div>
-            <div className="">Available notes {c.notes.length}</div>
-            <div className='capitalize text-red-600'>{c.term.name}</div>
+            <div className='capitalize text-red-600'>{c.id}</div>
           </Link>
         );
     })}
