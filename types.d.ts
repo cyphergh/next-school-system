@@ -384,9 +384,6 @@ type Subject = Prisma.SubjectGetPayload<{ include: { class: true } }>;
 type Topic = Prisma.TopicGetPayload<{
   include: {
     notes: true;
-    exercises: true;
-    assignment: true;
-    projectworks: true;
     term:true,
   };
 }>;

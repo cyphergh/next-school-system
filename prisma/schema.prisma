@@ -684,8 +684,8 @@ model Topic {
   subject      Subject       @relation(fields: [subjectId], references: [id])
   notes        Note[]
   exercises    Exercise[]
-  termId      String
-  term        Term                 @relation(fields: [termId], references: [id])
+  termId       String
+  term         Term                 @relation(fields: [termId], references: [id])
   assignment   Assignment[]
   projectworks ProjectWork[]
 }

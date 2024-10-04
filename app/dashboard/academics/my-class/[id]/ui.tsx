@@ -132,23 +132,7 @@ function UI({ subject, t }: { subject: Subject; t: Topic[] }) {
                       </div>
                     </div>
                   </Link>
-                  
-                  <Link href={`./exercise/${t.id}`} className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2">
-                    <div className="flex flex-row justify-between p-2  items-center ">
-                      <div>Exercise</div>
-                      <div className="flex gap-x-2 items-center">
-                        <div>{t.exercises.length}</div>
-                      </div>
-                    </div>
-                  </Link>
-                  <Link href={`./assignment/${t.id}`} className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2">
-                    <div className="flex flex-row justify-between p-2  items-center ">
-                      <div>Assignment</div>
-                      <div className="flex gap-x-2 items-center">
-                        <div>{t.assignment.length}</div>
-                      </div>
-                    </div>
-                  </Link>
+                
                   
                   {/* <div className="flex flex-row justify-between p-2 border">
                   <div>Project Works</div>
