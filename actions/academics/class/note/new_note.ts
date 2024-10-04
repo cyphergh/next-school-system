@@ -35,9 +35,40 @@ export async function NewNote({
       },
     });
     if (!term) throw new Error("Create a new term first");
-    
-
-    return { error: true, errorMessage: "Impl error", notes: [] };
+  
+    const subject = await prisma.subject.findUniqueOrThrow({
+      where: {
+        id: subjectId,
+      },
+    })
+    if(subject.staffId != user.id) return { error: true, errorMessage: "Permission Denied", notes: [] };
+    const topic = await prisma.topic.findUniqueOrThrow({
+      where: {
+        id: topicId,
+      },
+    })
+    await prisma.note.create({
+      data:{
+        title:title.toLowerCase(),
+        content:content,
+        subjectId:subjectId,
+        termId:term.id,
+        topicId:topicId,
+        staffId:user.id
+      }
+    });
+    const notes = await prisma.note.findMany({
+      where:{
+          topicId:topicId
+      },
+      include:{
+          subject:true,
+          staff:true,
+          term:true,
+          topic:true,
+        }
+    });
+    return { error: false, errorMessage: "", notes };
 
  } catch (error:any) {
     return { error: true, errorMessage: error.string(), notes: [] };

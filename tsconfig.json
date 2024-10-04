@@ -33,7 +33,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
-  ],
+, "actions/academics/class/note/get_note.ts"  ],
   "exclude": [
     "node_modules"
   ]

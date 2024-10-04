@@ -20,71 +20,76 @@ import { ToastAction } from "@/components/ui/toast";
 import { InfinitySpin } from "react-loader-spinner";
 import { NewNote } from "@/actions/academics/class/note/new_note";
 import { Note, Topic } from "@/types";
-function NewNoteDialog({
-  show,
-  setShow,
-  setNotes,
-  topic
-}: {
-  show: boolean;
-  topic:Topic;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  setNotes:React.Dispatch<React.SetStateAction<Note[]>>;
+import { Card } from '@/components/ui/card'
+import { UpdateNote } from "@/actions/academics/class/note/update_note";
+
+function UpdateNoteCard({
+    e,
+    setNotes,
+}:{e:Note,  setNotes:React.Dispatch<React.SetStateAction<Note[]>>;
 }) {
-  const [content, setContent] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
-  const [title, setTitle] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
-  const submit = async () => {
-    if (!title) {
-      setShowPreview(false);
-      return toast({
-        title: "Title cannot be empty",
-        variant: "destructive",
-        action: <ToastAction altText="Ok">Ok</ToastAction>,
-      });
-    }
-    if (!content) {
-      setShowPreview(false);
-      return toast({
-        title: "Note cannot be empty",
-        variant: "destructive",
-        action: <ToastAction altText="Ok">Ok</ToastAction>,
-      });
-    }
-    try {
-      setLoading(true);
-      const res = await NewNote({
-        title,
-        content,
-        topicId: topic.id,
-        subjectId:topic.subjectId,
-      }) 
-      setLoading(false);
-      if(res.error) return toast({
-        title: res.errorMessage,
-        variant: "destructive",
-        action: <ToastAction altText="Ok">Ok</ToastAction>,
-      });
-      setTitle("");
-      setContent("");
-      setShow(false);
-      setShowPreview(false);
-      setNotes(res.notes);
-    } catch (error) {
-      
-      setLoading(false);
-      return toast({
-        title: "Connection failed",
-        variant: "destructive",
-        action: <ToastAction altText="Ok">Ok</ToastAction>,
-      });
-    }
-  };
+    const [content, setContent] = useState(e.content);
+    const [showPreview, setShowPreview] = useState(false);
+    const [title, setTitle] = useState(e.title);
+    const [loading, setLoading] = useState(false);
+    const [show,setShow] = useState(false);
+    const { toast } = useToast();
+    const update = async () => {
+        if (!title) {
+          setShowPreview(false);
+          return toast({
+            title: "Title cannot be empty",
+            variant: "destructive",
+            action: <ToastAction altText="Ok">Ok</ToastAction>,
+          });
+        }
+        if (!content) {
+          setShowPreview(false);
+          return toast({
+            title: "Note cannot be empty",
+            variant: "destructive",
+            action: <ToastAction altText="Ok">Ok</ToastAction>,
+          });
+        }
+        try {
+          setLoading(true);
+          const res = await UpdateNote({
+            title,
+            content,
+            topicId: e.topicId,
+            subjectId:e.subjectId,
+            noteId:e.id,
+          }) 
+          setLoading(false);
+          if(res.error) return toast({
+            title: res.errorMessage,
+            variant: "destructive",
+            action: <ToastAction altText="Ok">Ok</ToastAction>,
+          });
+          setTitle("");
+          setContent("");
+          setShow(false);
+          setShowPreview(false);
+          setNotes(res.notes);
+        } catch (error) {
+          
+          setLoading(false);
+          return toast({
+            title: "Connection failed",
+            variant: "destructive",
+            action: <ToastAction altText="Ok">Ok</ToastAction>,
+          });
+        }
+      };
   return (
     <>
-      <AlertDialog open={show} onOpenChange={setShow}>
+      <Card onClick={() => setShow(true)} className="w-full sm:w-[48%] lg:w-[400px]  flex flex-col gap-2 p-4 mb-2  sm:mb-0 shadow-sm cursor-pointer">
+                <div className='capitalize font bold'>
+                    {e.title}
+                </div>
+            </Card>
+
+            <AlertDialog open={show} onOpenChange={setShow}>
         <AlertDialogContent className="min-h-[90%] max-h-[90%] min-w-[90%] max-w-[90%] flex flex-col  overflow-hidden">
           {loading ? (
             <div className="flex-1 flex justify-center items-center">
@@ -121,8 +126,8 @@ function NewNoteDialog({
                 </div>
               </div>
               <AlertDialogFooter className="flex gap-2">
-                <Button className="hidden lg:block" onClick={submit}>
-                  Submit
+                <Button className="hidden lg:block" onClick={update}>
+                  Update
                 </Button>
                 <Button
                   className="lg:hidden block"
@@ -153,8 +158,8 @@ function NewNoteDialog({
           ) : (
             <>
               <AlertDialogFooter className="flex gap-2 flex-col">
-                <Button className="lg:hidden block" onClick={submit}>
-                  Submit
+                <Button className="lg:hidden block" onClick={update}>
+                  Update
                 </Button>
                 <AlertDialogCancel>Ok</AlertDialogCancel>
               </AlertDialogFooter>
@@ -163,7 +168,7 @@ function NewNoteDialog({
         </AlertDialogContent>
       </AlertDialog>
     </>
-  );
+  )
 }
 
-export default NewNoteDialog;
+export default UpdateNoteCard

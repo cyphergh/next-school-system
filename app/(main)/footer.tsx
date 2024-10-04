@@ -2,7 +2,7 @@ import React from 'react'
 
 function WebFooter() {
   return (
-    <footer className="bg-gray-800 text-white py-8 dark:bg-gray-900 dark:text-gray-200 snap-start h-screen">
+    <footer className="bg-gray-800 text-white py-8 dark:bg-gray-900 dark:text-gray-200 snap-start h-screen w-full  bg-opacity-40">
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="mb-4 md:mb-0">
