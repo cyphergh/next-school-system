@@ -4,7 +4,6 @@ import React from "react";
 import UI from "./ui";
 type Props = {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 async function Page(
     { params }: { params: { id: string } }
@@ -28,6 +27,10 @@ async function Page(
     include:{
       notes:true,
       term:true,
+      exercises:true,
+      assignment:true,
+      projectworks:true,
+      subject:true,
     }
   })
   return  <UI subject={subject} t={topics}></UI>;

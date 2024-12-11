@@ -80,6 +80,7 @@ export async function AddTopic(
           },
         },
         term:true,
+        subject:true,
       },
     });
     return { error: false, errorMessage: "Implementation error", topics };

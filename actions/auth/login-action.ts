@@ -28,7 +28,6 @@ export async function LoginServerAction(
       where:{}
     });
     if(!userExist) await CreateDevUser();
-    console.log("pass-31")
     const user = await prisma.user.findFirst({
       where: {
         OR: [

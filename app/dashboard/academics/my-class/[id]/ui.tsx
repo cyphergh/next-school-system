@@ -12,13 +12,29 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Subject, Topic } from "@/types";
+import { Prisma } from "@prisma/client";
 import { ToastAction } from "@radix-ui/react-toast";
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaPlus, FaSync } from "react-icons/fa";
 import { InfinitySpin } from "react-loader-spinner";
 
-function UI({ subject, t }: { subject: Subject; t: Topic[] }) {
+function UI({
+  subject,
+  t,
+}: {
+  subject: Subject;
+  t: Prisma.TopicGetPayload<{
+    include: {
+      exercises: true;
+      assignment: true;
+      term: true;
+      notes: true;
+      projectworks: true;
+      subject: true;
+    };
+  }>[];
+}) {
   "use client";
   const [showNewTopic, setShowNewTopic] = useState(false);
   const [topics, setTopics] = useState(t);
@@ -124,7 +140,10 @@ function UI({ subject, t }: { subject: Subject; t: Topic[] }) {
                 <div className="font-bold font-mono"> {t.term.name}</div>
                 <hr></hr>
                 <div className="flex flex-col gap-y-1">
-                  <Link href={`./note/${t.id}`} className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2">
+                  <Link
+                    href={`./note/${t.id}`}
+                    className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2"
+                  >
                     <div className="flex flex-row justify-between p-2  items-center ">
                       <div>Notes</div>
                       <div className="flex gap-x-2 items-center">
@@ -132,12 +151,17 @@ function UI({ subject, t }: { subject: Subject; t: Topic[] }) {
                       </div>
                     </div>
                   </Link>
-                
-                  
-                  {/* <div className="flex flex-row justify-between p-2 border">
-                  <div>Project Works</div>
-                  <div>{t.assignment.length}</div>
-                </div> */}
+                  <Link
+                    href={`./exercise/${t.id}`}
+                    className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2"
+                  >
+                    <div className="flex flex-row justify-between p-2 border">
+                    <div>Exercise</div>
+                    <div>{t.exercises.length}</div>
+                  </div>
+                  </Link>
+
+                 
                 </div>
               </Card>
             ))}

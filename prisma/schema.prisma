@@ -227,7 +227,8 @@ model Student {
   notifications  Notification[]
   message        Messages[]
   activities     ActivityLog[]
-
+  examsRecords   ExamRecords[]
+  releasedExams ReleaseExams[]
   @@unique([id, classId, isClassPrefect])
 }
 
@@ -317,6 +318,8 @@ model Class {
   formMaster   Staff?
   subjects     Subject[]
   edbills      EDBIll[]
+    releasedExams ReleaseExams[]
+
 }
 
 model Transaction {
@@ -500,6 +503,8 @@ model Subject {
   notes           Note[]
   assessmentScore AssessmentScore[]
   topics          Topic[]
+  exams           ExaminationSubjects []
+  examRecords   ExamRecords[]
 }
 
 enum Asstype {
@@ -613,17 +618,55 @@ model Attendance {
   termId    String
   term      Term     @relation(fields: [termId], references: [id])
 }
-
+enum ClassScoreSource {
+  System
+  Manual
+  Full  
+}
 model Examination {
   id        String   @id @default(cuid())
   title     String
   date      DateTime
+  open      Boolean @default(false)
+  release      Boolean @default(false)
+  showPosition Boolean
+  showGrade    Boolean
+  classScoreSource ClassScoreSource
+  classScorePercent Int
+  minimumExamScore Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   termId    String
   term      Term     @relation(fields: [termId], references: [id])
+  subjects ExaminationSubjects[]
+  records ExamRecords[]
+  releasedExams ReleaseExams[]
+  @@unique([title,termId])
+}
+model ExaminationSubjects {
+  id        String   @id @default(cuid())
+  examId    String
+  examination Examination @relation(references: [id],fields: [examId])
+  subjectId String
+  subject Subject @relation(fields: [subjectId],references: [id])
 }
 
+model ExamRecords {
+  id        String   @id @default(cuid())
+  examId    String
+  examination Examination @relation(references: [id],fields: [examId])
+  studentId    String
+  student Student @relation(references: [id],fields: [studentId])
+  subjectId String
+  subject Subject @relation(fields: [subjectId],references: [id])
+  classScore Float?
+  examScore  Float?
+  Remark     String
+  grade      Int
+  total      Float
+  done       Boolean @default(false)
+  @@unique([examId,studentId,subjectId])
+}
 model Assignment {
   id          String                @id @default(cuid())
   title       String
@@ -767,9 +810,9 @@ model Enquiry {
 
 model Bill {
   id          String        @id @default(cuid())
-  amount      Float // Total amount of the bill
-  dueDate     DateTime? // Due date for the bill payment
-  status      BillStatus // Status of the bill (e.g., unpaid, paid)
+  amount      Float
+  dueDate     DateTime?
+  status      BillStatus 
   createdAt   DateTime      @default(now()) // Timestamp when the bill was created
   updatedAt   DateTime      @updatedAt // Timestamp when the bill was last updated
   payments    Transaction[] @relation(name: "billReference")
@@ -816,4 +859,21 @@ model Term {
   edbills      EDBIll[]
   expenses     Expenditure[]
   topics       Topic[]
+  releasedExams ReleaseExams[]
+}
+
+model ReleaseExams {
+    id           String        @id @default(cuid())
+    termId       String
+    term    Term @relation(fields: [termId],references: [id])
+    classId     String
+    class   Class @relation(fields: [classId],references: [id])
+    grade       Int?
+    position    Int?
+    totalScore  Int
+    studentId   String
+    student Student @relation(fields: [studentId],references: [id])
+    examId      String
+    exams   Examination @relation(fields: [examId],references: [id])
+    @@unique([termId,studentId,examId])
 }

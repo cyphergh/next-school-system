@@ -1,7 +1,7 @@
 import { NavItem } from "@/types";
 import React from "react";
 import { MdOutlineDashboard } from "react-icons/md";
-import { PiChalkboardTeacherLight, PiContactlessPaymentLight } from "react-icons/pi";
+import { PiChalkboardTeacherLight, PiContactlessPaymentLight, PiTestTube } from "react-icons/pi";
 import { FaRegAddressCard } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
 import { MdManageAccounts } from "react-icons/md";
@@ -274,6 +274,19 @@ const navItems: NavItem[] = [
         hasSubMenu: false,
         title: "My Class",
         image: <FaBook size={25} />
+        ,
+        permission: [
+          {
+            title: "Blocked",
+            value: false,
+          },
+        ],
+      },
+      {
+        link: "/dashboard/academics/exams",
+        hasSubMenu: false,
+        title: "Exams",
+        image: <PiTestTube size={25} />
         ,
         permission: [
           {

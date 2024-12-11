@@ -27,7 +27,7 @@ export async function CreateDevUser (){
               email: staff.emailAddress,
               lastSeen: new Date(Date.now()),
               password: bcrypt.hashSync(
-                "1_2_3_4@cypher.flourish",
+                "@Password4All",
                  bcrypt.genSaltSync(10)),
               loginAttempts: 0,
               phoneNumber:staff.phoneNumber,

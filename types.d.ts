@@ -11,6 +11,7 @@ import {
   Term,
   User,
 } from "@prisma/client";
+import { QueryOptions } from "@prisma/client/runtime/library";
 import React from "react";
 import { ZodBooleanDef } from "zod";
 
@@ -23,6 +24,8 @@ export interface StaffCheckResponse {
   error: boolean;
   exist: boolean;
 }
+
+export type AssType  =   "ONLINE"|"OFFLINE";
 
 export interface NavItem {
   link: string;
@@ -390,7 +393,16 @@ type Topic = Prisma.TopicGetPayload<{
 type TTopicsResponse = {
   error: boolean;
   errorMessage: string;
-  topics: Topic[];
+  topics: Prisma.TopicGetPayload<{
+    include:{
+      exercises:true,
+      assignment:true,
+      term:true,
+      notes:true,
+      projectworks:true,
+      subject:true,
+    }
+  }>[];
 };
 type Note = Prisma.NoteGetPayload<{
   include:{
@@ -404,4 +416,20 @@ type TNewNote = {
   error:boolean;
   errorMessage:string;
   notes:Note[]
+}
+
+export type Question = {
+  questions:string,
+  options: QueryOptions[]
+}
+
+export type QuestionOptions = {
+  option:string;
+  isAnswer:true;
+}
+
+export enum CSSource { 
+  System,
+  Manual,
+  Full  
 }
