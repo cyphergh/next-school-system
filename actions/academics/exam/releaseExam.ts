@@ -54,6 +54,8 @@ export async function ReleaseExam(
         for (let j=0;j<stage.students.length;j++){
             const student = stage.students[j];
             let totalScore = 0;
+            let core = [];
+            let elective = [];
             for(let a=0;a<stage.subjects.length;a++){
                 const subject = stage.subjects[a];
                 const record = await prisma.examRecords.findFirst({
@@ -62,13 +64,30 @@ export async function ReleaseExam(
                         subjectId:subject.id,
                     }
                 })
+                if(subject.isCore){
+                    core.push(record)
+                }else{
+                    elective.push(record)
+                }
                 if(!record) throw "Can't release exam. Pending results";
                 totalScore += Math.round(record.total)
             }
             const grade = 0;
             const position=0;
-            await prisma.releaseExams.create({
-                data:{
+            core.sort((a,b)=>b?.total!-a?.total!);
+            elective.sort((a,b)=>b?.total!-a?.total!);
+            const coreGrade = core.reduce((acc, item) => acc + item?.grade!, 0);
+            console.log(student.firstName)
+            console.log(coreGrade);
+            await prisma.releaseExams.upsert({
+                where:{
+                    termId_studentId_examId:{
+                        termId:term.id,
+                        studentId:student.id,
+                        examId:examination.id,
+                    }
+                },
+                create:{
                     totalScore,
                     classId:stage.id,
                     examId:examination.id,
@@ -76,8 +95,16 @@ export async function ReleaseExam(
                     termId:term.id,
                     grade,
                     position,
-                    
-                }
+                },
+                update:{
+                    totalScore,
+                    classId:stage.id,
+                    examId:examination.id,
+                    studentId:student.id,
+                    termId:term.id,
+                    grade,
+                    position,
+                },
             })
         }
       }
