@@ -433,3 +433,27 @@ export enum CSSource {
   Manual,
   Full  
 }
+type rT = Prisma.ReleaseExamsGetPayload<{
+  include: {
+    exams: {
+      include: {
+        records: {
+          include: {
+            subject: true;
+          };
+        };
+      };
+    };
+    student: {
+      include:{
+        images:true;
+    }
+    };
+    class: {
+      include: {
+        students: true;
+        formMaster:true;
+      };
+    };
+  };
+}>;

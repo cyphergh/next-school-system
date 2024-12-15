@@ -4,10 +4,24 @@ import { IsAccountActive } from "@/actions/account-active";
 import { setLastSeen } from "@/actions/auth/setLastSeen";
 import { getSession } from "@/actions/session";
 import prisma from "@/prisma/db";
+import { Prisma } from "@prisma/client";
 
 export async function ReleaseExam(
   id: string
-): Promise<{ error: boolean; errorMessage?: string }> {
+): Promise<{ error: boolean; errorMessage?: string,exams?:Prisma.ExaminationGetPayload<{
+  include: {
+    term: true;
+    subjects: {
+      include: {
+        subject: {
+          include: {
+            staff: true;
+          };
+        };
+      };
+    };
+  };
+}>[] }> {
   try {
     const session = await getSession();
     if (!session.isLoggedIn || !session.userId)
@@ -43,6 +57,15 @@ export async function ReleaseExam(
     });
     if(!examination) return { error: true, errorMessage: "Exams not found" };
     await prisma.$transaction(async(prisma)=>{
+      await prisma.examination.update({
+        where:{
+          id:examination.id
+        },
+        data:{
+          release:true,
+          open:false,
+        }
+      })
       const classes =  await prisma.class.findMany({
         include:{
             subjects:true,
@@ -72,13 +95,14 @@ export async function ReleaseExam(
                 if(!record) throw "Can't release exam. Pending results";
                 totalScore += Math.round(record.total)
             }
-            const grade = 0;
+            let grade = 0;
             const position=0;
             core.sort((a,b)=>b?.total!-a?.total!);
             elective.sort((a,b)=>b?.total!-a?.total!);
-            const coreGrade = core.reduce((acc, item) => acc + item?.grade!, 0);
-            console.log(student.firstName)
-            console.log(coreGrade);
+            // !Calculating the core grade
+             grade = core.reduce((acc, item) => acc + item?.grade!, 0);
+            // !Adding 2 best elective grade
+            grade += elective.slice(0,2).reduce((acc, item) => acc + item?.grade!, 0)
             await prisma.releaseExams.upsert({
                 where:{
                     termId_studentId_examId:{
@@ -107,9 +131,59 @@ export async function ReleaseExam(
                 },
             })
         }
+        // ! Calculating positions
+        const allResults = await prisma.releaseExams.findMany({
+          where:{
+            classId:stage.id,
+            examId:examination.id,
+          }
+        });
+        for (let j=0;j<stage.students.length;j++){
+          const student = stage.students[j]
+          const myTotalScore = allResults.find((e)=>e.studentId==student.id)?.totalScore;
+          const myGrade = allResults.find((e)=>e.studentId==student.id)?.grade;
+          if(!myTotalScore) throw `${student.firstName} ${stage.className} Total Score Is Invalid`;
+          let pos = 1;
+          allResults.forEach((e)=>{
+            if(e.totalScore>myTotalScore) pos++;
+          });
+          await prisma.releaseExams.update({
+            where:{
+              termId_studentId_examId:{
+                termId:term.id,
+                studentId:student.id,
+                examId:examination.id
+              }
+            },
+            data:{
+              position:pos
+            }
+          });
+          console.log(student.firstName,pos, myTotalScore,myGrade)
+        }
+        const res = await prisma.releaseExams.findMany({
+          where:{
+            examId:examination.id
+          }
+        });
+      }
+    });
+    const exams = await prisma.examination.findMany({
+      include:{
+        term:true,
+        subjects:{
+          include:{
+            subject:{
+              include:{
+                class:true,
+                staff:true
+              }
+            }
+          }
+        }
       }
     })
-    return { error: true, errorMessage: "Implementation error" };
+  return {error:false,errorMessage:"",exams}
   } catch (error: any) {
     return { error: true, errorMessage: error.toString() };
   }

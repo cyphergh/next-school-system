@@ -33,10 +33,11 @@ export async function Record(
     });
     const examination = await prisma.examination.findFirst({
         where:{
-            id:examId
+            id:examId,
+            open:true,
         }
     });
-    if(!examination) throw "Examination error"
+    if(!examination) throw "Examination is not open"
     if(!examination.open) throw "Exams is not open"
     let total:number =0;
     let cs:number|null = classScore;

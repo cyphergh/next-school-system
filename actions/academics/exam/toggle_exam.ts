@@ -48,14 +48,31 @@ export async function ToggleExam(id:string,value:boolean):Promise<{error:boolean
           if (!term) throw new Error("Create a new term first");
         if (!myPermissions && user.phoneNumber !== "0206821921")
           return { error: true, errorMessage: "Permission Denied",exams:[] };
-        await prisma.examination.update({
+        await prisma.$transaction(async(prisma)=>{
+          await prisma.examination.update({
             where:{
                 id
             },
             data:{
-                open:value
+                open:value,
             }
         });
+        if(value){
+          await prisma.examination.update({
+            where:{
+                id
+            },
+            data:{
+                release:false
+            }
+        });
+        }
+        await prisma.releaseExams.deleteMany({
+          where:{
+            examId:id
+          }
+        });
+        })
         const exams = await prisma.examination.findMany({
             include:{
               term:true,
@@ -63,6 +80,7 @@ export async function ToggleExam(id:string,value:boolean):Promise<{error:boolean
                 include:{
                   subject:{
                     include:{
+                      class:true,
                       staff:true
                     }
                   }

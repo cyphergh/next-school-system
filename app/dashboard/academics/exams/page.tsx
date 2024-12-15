@@ -34,6 +34,7 @@ async function ExamPage() {
         include:{
           subject:{
             include:{
+              class:true,
               staff:true
             }
           }
