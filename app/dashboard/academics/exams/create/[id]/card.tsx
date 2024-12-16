@@ -215,7 +215,7 @@ function StudentRecord({
   };
   return (
     <div className="border p-3 rounded-sm mb-2">
-      <div className="font-bold p-2">
+      <div className=" p-2 capitalize">
         {student.firstName} {student.lastName}
       </div>
       <div className="flex flex-row gap-2">
