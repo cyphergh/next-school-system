@@ -74,7 +74,7 @@ export async function FinishConfirmStaffAccount(
     if (!file.type.includes("image")) 
       return { error: true, errorMessage: "Invalid image file" };
     let data = await file.arrayBuffer();
-    let imageBuffer = new Buffer(data);
+    let imageBuffer = Buffer.from(data);
     if (!fs.existsSync("./uploads")) {
       fs.mkdirSync("./uploads");
     }
