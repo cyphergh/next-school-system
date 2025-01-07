@@ -1,11 +1,13 @@
 import {
   AccountType,
   Class,
+  Exercise,
   Expenditure,
   Father,
   Mother,
   Permissions,
   Prisma,
+  QuestionType,
   Staff,
   Student,
   Term,
@@ -419,13 +421,16 @@ type TNewNote = {
 }
 
 export type Question = {
-  questions:string,
-  options: QueryOptions[]
+  question:string,
+  options: QuestionOptions[],
+  type:QuestionType,
+  isTrue?:boolean,
+  mark:number,
 }
 
 export type QuestionOptions = {
   option:string;
-  isAnswer:true;
+  isAnswer:boolean;  
 }
 
 export enum CSSource { 
@@ -457,3 +462,10 @@ type rT = Prisma.ReleaseExamsGetPayload<{
     };
   };
 }>;
+
+type NewExerciseResponse  = {
+  error:boolean;
+  errorMessage:string;
+  exercises?:Exercise[];
+
+}

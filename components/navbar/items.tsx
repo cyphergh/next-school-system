@@ -297,29 +297,29 @@ const navItems: NavItem[] = [
       },
     ],
   },
-  {
-    link: "/dashboard/notification",
-    hasSubMenu: true,
-    title: "Alerts",
-    image: <IoNotificationsOutline size={30} />,
-    permission: [{
-      title: "Blocked",
-      value: false,
-    }],
-    subMenu: [],
-  },
-  {
-    link: "/dashboard/message",
-    hasSubMenu: true,
-    title: "Message",
-    image: <TbMessage2 size={30} />
-    ,
-    permission: [{
-      title: "Blocked",
-      value: false,
-    }],
-    subMenu: [],
-  },
+  // {
+  //   link: "/dashboard/notification",
+  //   hasSubMenu: true,
+  //   title: "Alerts",
+  //   image: <IoNotificationsOutline size={30} />,
+  //   permission: [{
+  //     title: "Blocked",
+  //     value: false,
+  //   }],
+  //   subMenu: [],
+  // },
+  // {
+  //   link: "/dashboard/message",
+  //   hasSubMenu: true,
+  //   title: "Message",
+  //   image: <TbMessage2 size={30} />
+  //   ,
+  //   permission: [{
+  //     title: "Blocked",
+  //     value: false,
+  //   }],
+  //   subMenu: [],
+  // },
 ];
 
 export default navItems;

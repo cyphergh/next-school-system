@@ -503,7 +503,7 @@ function PrintDialog({
                       ></td>
                     </tr>
                     <tr className="flex">
-                      <td className="px-4 py-2 border">Teacher's Remark</td>
+                      <td className="px-4 py-2 border">Teachers Remark</td>
                       <td
                         colSpan={1}
                         className="px-4 py-2 border-b text-left w-full flex-1"
@@ -511,12 +511,12 @@ function PrintDialog({
                     </tr>
                     <tr className="flex">
                       <td className="px-4 py-2 border">
-                        Head Teacher's Remark
+                        Head Teachers Remark
                       </td>
                       <td
                         colSpan={1}
                         className="px-4 py-2 border-b text-left w-full flex-1"
-                      ></td>
+                      ></td>  
                     </tr>
                   </tbody>
                 </table>

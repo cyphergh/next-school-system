@@ -507,7 +507,7 @@ model Subject {
   examRecords   ExamRecords[]
 }
 
-enum Asstype {
+enum AssType {
   ONLINE
   OFFLINE
 }
@@ -515,10 +515,13 @@ enum Asstype {
 model Exercise {
   id          String               @id @default(cuid())
   title       String
-  type        Asstype
-  totalScore  Int
+  totalSubmissions   Int @default(0)
+  totalStudents      Int 
+  totalMarked        Int @default(0)
+  type        AssType
+  totalScore  Float
   description String?
-  dueDate     DateTime
+  dueDate     DateTime?
   createdAt   DateTime             @default(now())
   updatedAt   DateTime             @updatedAt
   staff       Staff                @relation(fields: [staffId], references: [id])
@@ -537,12 +540,14 @@ model Exercise {
 model StudentsOnExercise {
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId String
+  submitted  Boolean @default(false)
   student    Student  @relation(fields: [studentId], references: [id])
   studentId  String
   assignedBy String
   assignedAt DateTime @default(now())
-
   @@id([studentId, exerciseId])
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
 }
 
 model StudentOnProjectWork {
@@ -550,8 +555,9 @@ model StudentOnProjectWork {
   projectworkId String
   student       Student     @relation(fields: [studentId], references: [id])
   studentId     String
-  type          Asstype
+  type          AssType
   assignedBy    String
+   submitted  Boolean @default(false)
   assignedAt    DateTime    @default(now())
 
   @@id([studentId, projectworkId])
@@ -562,6 +568,7 @@ model StudentOnAssignment {
   assignmentId String
   student      Student    @relation(fields: [studentId], references: [id])
   studentId    String
+   submitted  Boolean @default(false)
   assignedBy   String
   assignedAt   DateTime   @default(now())
 
@@ -572,8 +579,11 @@ model ProjectWork {
   id          String                 @id @default(cuid())
   title       String
   totalScore  Int
+    totalSubmissions   Int @default(0)
+  totalStudents      Int 
+  totalMarked        Int @default(0)
   description String?
-  dueDate     DateTime
+  dueDate     DateTime?
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
   staff       Staff                  @relation(fields: [staffId], references: [id])
@@ -671,9 +681,12 @@ model Assignment {
   id          String                @id @default(cuid())
   title       String
   totalScore  Int
-  type        Asstype
+  totalSubmissions   Int @default(0)
+  totalStudents      Int 
+  totalMarked        Int @default(0)
+  type        AssType
   description String?
-  dueDate     DateTime
+  dueDate     DateTime?
   createdAt   DateTime              @default(now())
   updatedAt   DateTime              @updatedAt
   staff       Staff                 @relation(fields: [staffId], references: [id])
@@ -709,8 +722,8 @@ model Submission {
   assignmentId    String
   exercise        Exercise         @relation(fields: [exerciseId], references: [id])
   exerciseId      String
-  projectwork     ProjectWork      @relation(fields: [projectworkId], references: [id])
-  projectworkId   String
+  projectWork     ProjectWork      @relation(fields: [projectWorkId], references: [id])
+  projectWorkId   String
   student         Student          @relation(fields: [studentId], references: [id])
   studentId       String
   termId          String
@@ -736,15 +749,15 @@ model Topic {
 model Question {
   id            String           @id @default(cuid())
   text          String // The text of the question
-  type          QuestionType // Type of the question (e.g., multiple-choice, true/false)
+  type          QuestionType 
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
-  exercise      Exercise         @relation(fields: [exerciseId], references: [id])
-  exerciseId    String
-  assignment    Assignment       @relation(fields: [assignmentId], references: [id])
-  assignmentId  String
-  projectwork   ProjectWork      @relation(fields: [projectworkId], references: [id])
-  projectworkId String
+  exercise      Exercise?         @relation(fields: [exerciseId], references: [id])
+  exerciseId    String?
+  assignment    Assignment?       @relation(fields: [assignmentId], references: [id])
+  assignmentId  String?
+  projectwork   ProjectWork?      @relation(fields: [projectworkId], references: [id])
+  projectworkId String?
   options       QuestionOption[]
 }
 

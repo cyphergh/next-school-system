@@ -140,9 +140,9 @@ export async function ReleaseExam(
         });
         for (let j=0;j<stage.students.length;j++){
           const student = stage.students[j]
-          const myTotalScore = allResults.find((e)=>e.studentId==student.id)?.totalScore;
+          let myTotalScore = allResults.find((e)=>e.studentId==student.id)?.totalScore;
           const myGrade = allResults.find((e)=>e.studentId==student.id)?.grade;
-          if(!myTotalScore) throw `${student.firstName} ${stage.className} Total Score Is Invalid`;
+          if(!myTotalScore) myTotalScore =0;
           let pos = 1;
           allResults.forEach((e)=>{
             if(e.totalScore>myTotalScore) pos++;
