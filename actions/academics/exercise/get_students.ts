@@ -41,7 +41,19 @@ export async function GetStudentsOnExercise(
             isActve: true,
           },
         }); 
-        if(!term) throw "No Active Term"
+        if(!term) throw "No Active Term";
+        const exercise = await prisma.exercise.findFirst({
+            where:{
+                id:exerciseId,
+                termId:term.id,
+            },
+            include:{
+                subject:true,
+            }
+        });
+        if(!exercise) throw "Exercise not found";
+        if(exercise.subject.staffId != user.id) throw "Permission Denied";
+
         return {error:true,errorMessage:"Impl error"}
     } catch (error:any) {
         return {error:true,errorMessage:error.toString()}

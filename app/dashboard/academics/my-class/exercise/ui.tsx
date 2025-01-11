@@ -66,18 +66,24 @@ function RecordExerciseCard({
       assessmentScore:true,
     }
   }>[]>([]);
-  
-  // useEffect(()=>{
-  //    getData();
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // },[])
+   const [error,setError] = useState(false);
+   const [errorMessage,setErrorMessage] = useState("");
   const getData = async() =>{
+      setLoading(true)
       const res = await GetStudentsOnExercise(exercise.id);
-      if(res.error) return toast({
+      setLoading(false)
+      if(res.error){
+         toast({
         description:res.errorMessage,
         title:"Error",
         variant:"destructive"
       })
+      setErrorMessage(res.errorMessage)
+      setError(true)
+      return;
+    }
+    setErrorMessage("")
+    setError(true)
   }
   const [loading,setLoading] = useState(true);
   return <AlertDialog>
@@ -94,12 +100,17 @@ function RecordExerciseCard({
         <div className='capitalize'>{exercise.createdAt.toLocaleString("en-GB")}</div>
       </AlertDialogHeader>
       <hr className='w-full'></hr>
-      {!loading && <Input placeholder='Search...'></Input>}
+      {!loading && !error && <Input placeholder='Search...'></Input>}
      {loading && <div className='w-full flex-1 justify-center items-center flex flex-col'>
         <InfinitySpin></InfinitySpin>
       </div>}
-     {!loading && <div className='flex-1 w-full'>
+     {!loading && !error && <div className='flex-1 w-full'>
         Loaded  
+      </div>}
+     {!loading && error && <div className='flex flex-col gap-y-4 flex-1 w-full text-red-700 font-bold capitalize text-center justify-center items-center'>
+        {errorMessage}
+        <br></br>
+        <Button onClick={()=>getData()}>Try Again</Button>
       </div>}
       <AlertDialogFooter>
         <AlertDialogCancel>Close</AlertDialogCancel>
