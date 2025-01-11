@@ -8,6 +8,12 @@ type Props = {
 async function Page(
     { params }: { params: { id: string } }
 ) {
+  const term = await prisma.term.findFirst({
+    where:{
+      isActve:true
+    }
+  });
+  if(!term) throw new Error("No active term")
   const subject = await prisma.subject.findFirst({
     where:{
       id:params.id
@@ -27,9 +33,21 @@ async function Page(
     include:{
       notes:true,
       term:true,
-      exercises:true,
-      assignment:true,
-      projectworks:true,
+      exercises:{
+        where:{
+          termId:term.id,
+        }
+      },
+      assignment:{
+        where:{
+          termId:term.id,
+        }
+      },
+      projectworks:{
+        where:{
+          termId:term.id,
+        }
+      },
       subject:true,
     }
   })

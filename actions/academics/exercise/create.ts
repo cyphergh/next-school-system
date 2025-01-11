@@ -118,8 +118,12 @@ export async function CreateExercise({
       })
     })
     const exercises = await prisma.exercise.findMany({
+      orderBy:{
+        createdAt:'desc'
+      },
         where:{
             termId:term.id,
+            topicId:topicId,
         },
     })
     return { error: false, errorMessage: "",exercises };

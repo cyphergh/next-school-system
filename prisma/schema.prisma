@@ -551,16 +551,15 @@ model StudentsOnExercise {
 }
 
 model StudentOnProjectWork {
-  projectwork   ProjectWork @relation(fields: [projectworkId], references: [id])
-  projectworkId String
+  projectWork   ProjectWork @relation(fields: [projectWorkId], references: [id])
+  projectWorkId String
   student       Student     @relation(fields: [studentId], references: [id])
   studentId     String
   type          AssType
   assignedBy    String
-   submitted  Boolean @default(false)
+  submitted  Boolean @default(false)
   assignedAt    DateTime    @default(now())
-
-  @@id([studentId, projectworkId])
+  @@id([studentId, projectWorkId])
 }
 
 model StudentOnAssignment {
@@ -712,6 +711,8 @@ model AssessmentScore {
   subject      Subject        @relation(fields: [subjectId], references: [id])
   subjectId    String
   submission   Submission     @relation(fields: [submissionId], references: [id])
+  termId    String
+  term   Term     @relation(fields: [termId], references: [id])
   submissionId String         @unique
 }
 
@@ -873,6 +874,7 @@ model Term {
   expenses     Expenditure[]
   topics       Topic[]
   releasedExams ReleaseExams[]
+  assessments  AssessmentScore[]
 }
 
 model ReleaseExams {
