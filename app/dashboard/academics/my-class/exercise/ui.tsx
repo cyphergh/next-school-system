@@ -10,6 +10,8 @@ import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, 
 import { InfinitySpin } from 'react-loader-spinner'
 import { GetStudentsOnExercise } from '@/actions/academics/exercise/get_students'
 import { toast } from '@/components/ui/use-toast'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { FaSync } from 'react-icons/fa'
 
 function ExerciseUI({topic}:{topic:Prisma.TopicGetPayload<{
     include:{
@@ -59,6 +61,9 @@ function RecordExerciseCard({
     include:{
       student:{
         include:{
+          images:{
+            take:1,
+          },
           submissions:{
             include:{
               assessmentScore:true,
@@ -71,6 +76,7 @@ function RecordExerciseCard({
   }>[]>([]);
    const [error,setError] = useState(false);
    const [errorMessage,setErrorMessage] = useState("");
+   const [search,setSearch] = useState("");
   const getData = async() =>{
       setLoading(true);
       setError(false);
@@ -99,18 +105,22 @@ function RecordExerciseCard({
 
     </AlertDialogTrigger>
     <AlertDialogContent className='flex flex-col overflow-hidden justify-start items-start h-dvh'>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Record Exercise</AlertDialogTitle>
-        <div className='capitalize'>{exercise.title}</div>
+      <AlertDialogHeader className='w-full'>
+        <AlertDialogTitle className='capitalize'>{exercise.title}</AlertDialogTitle>
         <div className='capitalize'>{exercise.createdAt.toLocaleString("en-GB")}</div>
       </AlertDialogHeader>
       <hr className='w-full'></hr>
-      {!loading && !error && <Input placeholder='Search...'></Input>}
+      
+      {!loading && !error && <div className='w-full flex flex-row items-center justify-between gap-x-3'> <Input className='flex-1 w-full' value={search} onChange={(e)=>setSearch(e.target.value)} placeholder='Search...'></Input>
+      <FaSync onClick={getData} size={25} className='cursor-pointer'></FaSync>
+      </div>}
      {loading && <div className='w-full flex-1 justify-center items-center flex flex-col'>
         <InfinitySpin></InfinitySpin>
       </div>}
-     {!loading && !error && <div className='flex-1 w-full'>
-        Loaded {records.length}
+     {!loading && !error && <div className='gap-4 flex flex-col flex-1 w-full overflow-y-scroll'>
+         {records.filter((e)=>(e.student.firstName +" "+e.student.lastName).toLowerCase().includes(search.toLowerCase())).map((e)=>{
+          return <RecordCard  key={e.studentId+e.exerciseId} record={e}></RecordCard>
+         })}
       </div>}
      {!loading && error && <div className='flex flex-col gap-y-4 flex-1 w-full text-red-700 font-bold capitalize text-center justify-center items-center'>
         {errorMessage}
@@ -118,11 +128,51 @@ function RecordExerciseCard({
         <Button onClick={()=>getData()}>Try Again</Button>
       </div>}
       <AlertDialogFooter>
-        <AlertDialogCancel>Close</AlertDialogCancel>
+        <AlertDialogCancel className='bg-red-800 text-white'>Close</AlertDialogCancel>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
 }
 
+
+function RecordCard({record}:{record:Prisma.StudentsOnExerciseGetPayload<{
+  include: {
+    student: {
+      include: {
+        images:{
+          take:1,
+        },
+        submissions: {
+          include: {
+            assessmentScore: true;
+          };
+        };
+      };
+    };
+    exercise: true;
+  };
+}>}){
+  return <div className=' p-4 rounded-sm border w-full flex flex-col hover:border-2 hover:border-blue-100 cursor-pointer'>
+    <div className='flex flex-row items-center gap-x-3'>
+    <Avatar className="w-[70px] h-[70px] cursor-pointer dark:text-white text-black font-normal text-3xl">
+          <AvatarImage
+            src={`${process.env.NEXT_PUBLIC_DOMAIN}/api/image/${record.student.images[0]?.id}`}
+            alt="profile"
+          />
+          <AvatarFallback>
+          {record.student.userId}
+          </AvatarFallback>
+        </Avatar>
+    <div className='flex flex-col capitalize flex-1 gap-1'>
+      <div>{record.student.firstName} {record.student.lastName}</div>
+      <div>{record.student.emailAddress}</div>
+       <div className='flex flex-row p-2 gap-2 pl-0'>
+         <Input className=' h-[40px]'  placeholder={`Score / ${record.exercise.totalScore}`} type='number'></Input>
+         <Button>Save</Button>
+       </div>
+      </div>
+    </div>
+  </div>
+}
 
 export default ExerciseUI

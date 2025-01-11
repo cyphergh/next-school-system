@@ -13,6 +13,9 @@ export async function GetStudentsOnExercise(exerciseId: string): Promise<{
     include: {
       student: {
         include: {
+            images:{
+                take:1,
+              },
           submissions: {
             include: {
               assessmentScore: true;
@@ -61,6 +64,12 @@ export async function GetStudentsOnExercise(exerciseId: string): Promise<{
       include: {
         student: {
           include: {
+            images:{
+                where:{
+                    isProfile:true,
+                },
+                take:1,
+              },
             submissions: {
               where: {
                 exerciseId: exercise.id,
