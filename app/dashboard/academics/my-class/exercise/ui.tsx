@@ -57,19 +57,23 @@ function RecordExerciseCard({
 }:{exercise:Exercise}){
   const [records,setRecords] = useState<Prisma.StudentsOnExerciseGetPayload<{
     include:{
-      student:true,
+      student:{
+        include:{
+          submissions:{
+            include:{
+              assessmentScore:true,
+            }
+          }
+        }
+      },
       exercise:true,
-    }
-  }>[]>([]);
-  const [submissions,setSubmissions] = useState<Prisma.SubmissionGetPayload<{
-    include:{
-      assessmentScore:true,
     }
   }>[]>([]);
    const [error,setError] = useState(false);
    const [errorMessage,setErrorMessage] = useState("");
   const getData = async() =>{
-      setLoading(true)
+      setLoading(true);
+      setError(false);
       const res = await GetStudentsOnExercise(exercise.id);
       setLoading(false)
       if(res.error){
@@ -83,7 +87,8 @@ function RecordExerciseCard({
       return;
     }
     setErrorMessage("")
-    setError(true)
+    setError(false);
+    if(res.records) setRecords(res.records);
   }
   const [loading,setLoading] = useState(true);
   return <AlertDialog>
@@ -105,7 +110,7 @@ function RecordExerciseCard({
         <InfinitySpin></InfinitySpin>
       </div>}
      {!loading && !error && <div className='flex-1 w-full'>
-        Loaded  
+        Loaded {records.length}
       </div>}
      {!loading && error && <div className='flex flex-col gap-y-4 flex-1 w-full text-red-700 font-bold capitalize text-center justify-center items-center'>
         {errorMessage}
