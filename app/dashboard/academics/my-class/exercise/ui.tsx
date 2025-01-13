@@ -12,6 +12,7 @@ import { GetStudentsOnExercise } from '@/actions/academics/exercise/get_students
 import { toast } from '@/components/ui/use-toast'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { FaSync } from 'react-icons/fa'
+import { IoReload } from 'react-icons/io5'
 
 function ExerciseUI({topic}:{topic:Prisma.TopicGetPayload<{
     include:{
@@ -152,6 +153,36 @@ function RecordCard({record}:{record:Prisma.StudentsOnExerciseGetPayload<{
     exercise: true;
   };
 }>}){
+  const [loading,setLoading] = useState(false);
+  const [score,setScore] = useState("");
+  const handleSave = () =>{
+    const sc = parseFloat(score);
+    if(isNaN(sc)){
+      toast({
+        title:"Error",
+        description:"Invalid number",
+        variant:"destructive"
+      })
+      return;
+    }
+    if(sc>record.exercise.totalScore){
+      toast({
+        title:"Range Error",
+        description: `Score can't be greater than ${record.exercise.totalScore}`,
+        variant:"destructive"
+      })
+      return;
+    }
+    if(sc<0){
+      toast({
+        title:"Range Error",
+        description: `Score can't be less than 0`,
+        variant:"destructive"
+      })
+      return;
+    }
+    setLoading(true);
+  }
   return <div className=' p-4 rounded-sm border w-full flex flex-col hover:border-2 hover:border-blue-100 cursor-pointer'>
     <div className='flex flex-row items-center gap-x-3'>
     <Avatar className="w-[70px] h-[70px] cursor-pointer dark:text-white text-black font-normal text-3xl">
@@ -166,9 +197,9 @@ function RecordCard({record}:{record:Prisma.StudentsOnExerciseGetPayload<{
     <div className='flex flex-col capitalize flex-1 gap-1'>
       <div>{record.student.firstName} {record.student.lastName}</div>
       <div>{record.student.emailAddress}</div>
-       <div className='flex flex-row p-2 gap-2 pl-0'>
-         <Input className=' h-[40px]'  placeholder={`Score / ${record.exercise.totalScore}`} type='number'></Input>
-         <Button>Save</Button>
+       <div className='flex items-center flex-row p-2 gap-2 pl-0'>
+         <Input disabled={loading} className=' h-[40px]' value={score} onChange={(e)=>setScore(e.target.value)}  placeholder={`Score / ${record.exercise.totalScore}`} type='number'></Input>
+        {loading? <IoReload size={25} className='animate-spin'></IoReload> : <Button onClick={handleSave}>Save</Button>}
        </div>
       </div>
     </div>
