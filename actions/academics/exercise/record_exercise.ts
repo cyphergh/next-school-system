@@ -10,7 +10,7 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
     soeId:string,
     score:number,
     studentId:string
-}):Promise<{error:boolean,errorMessage:string}>{
+}):Promise<{error:boolean,errorMessage:string,}>{
  try {
     const session = await getSession();
     if (!session.isLoggedIn || !session.userId)
@@ -72,7 +72,7 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
                 termId:term.id,
             },
         })
-        if(submission.createdAt != submission.updatedAt){
+        if(submission.createdAt.toString() != submission.updatedAt.toString()){
             isNew=false;
         }else{
             isNew=true;

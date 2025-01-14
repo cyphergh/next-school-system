@@ -76,10 +76,10 @@ function ExerciseUI({
             >
               <div className="p-2 font-mono flex flex-row justify-between">
                 <div>{exercise.type}</div>
-                <div>
+                <div className="flex flex-col">
                   [{exercise.totalScore} Mark{exercise.totalScore > 1 && "s"}]
-                  <div className="ml-2">
-                    {exercise.totalMarked}
+                  <div className="ml-2 text-red-600 font-bold">
+                    {Math.round(exercise.totalMarked/exercise.totalStudents*100)}% {exercise.type=="OFFLINE"? "Recorded":"Submitted"}
                   </div>
                 </div>
               </div>
@@ -337,7 +337,7 @@ function RecordCard({
             {loading ? (
               <IoReload size={25} className="animate-spin"></IoReload>
             ) : (
-              <Button className="flex flex-row items-center gap-x-1" onClick={handleSave}>{!sent?"Save":"Update"} {sent&& <IoCloudDone></IoCloudDone> }</Button>
+              <Button className="flex flex-row items-center gap-x-1" onClick={handleSave}>{!sent && !record.student.submissions[0]?.assessmentScore?.score ?"Save":"Update"} {sent&& <IoCloudDone></IoCloudDone> }</Button>
             )}
           </div>
         </div>
