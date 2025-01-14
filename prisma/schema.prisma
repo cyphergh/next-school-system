@@ -229,6 +229,7 @@ model Student {
   activities     ActivityLog[]
   examsRecords   ExamRecords[]
   releasedExams ReleaseExams[]
+  assessments  AssessmentScore[]
   @@unique([id, classId, isClassPrefect])
 }
 
@@ -703,9 +704,9 @@ model Assignment {
 
 model AssessmentScore {
   id           String         @id @default(cuid())
-  score        Float // Score achieved by the student
-  maxScore     Float // Maximum possible score
-  type         AssessmentType // Type of assessment (exercise or assignment)
+  score        Float
+  maxScore     Float
+  type         AssessmentType 
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   subject      Subject        @relation(fields: [subjectId], references: [id])
@@ -714,21 +715,29 @@ model AssessmentScore {
   termId    String
   term   Term     @relation(fields: [termId], references: [id])
   submissionId String         @unique
+  studentId String
+  student Student @relation(fields: [studentId],references: [id])
+  @@unique([studentId,submissionId])
 }
 
 model Submission {
   id              String           @id @default(cuid())
   assessmentScore AssessmentScore?
-  assignment      Assignment       @relation(fields: [assignmentId], references: [id])
-  assignmentId    String
-  exercise        Exercise         @relation(fields: [exerciseId], references: [id])
-  exerciseId      String
-  projectWork     ProjectWork      @relation(fields: [projectWorkId], references: [id])
-  projectWorkId   String
+  assignment      Assignment?       @relation(fields: [assignmentId], references: [id])
+  assignmentId    String?
+  exercise        Exercise?         @relation(fields: [exerciseId], references: [id])
+  exerciseId      String?
+  projectWork     ProjectWork?      @relation(fields: [projectWorkId], references: [id])
+  projectWorkId   String?
   student         Student          @relation(fields: [studentId], references: [id])
   studentId       String
   termId          String
   term            Term             @relation(fields: [termId], references: [id])
+    createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  @@unique([studentId,exerciseId])
+  @@unique([studentId,projectWorkId])
+  @@unique([studentId,assignmentId])
 }
 
 model Topic {

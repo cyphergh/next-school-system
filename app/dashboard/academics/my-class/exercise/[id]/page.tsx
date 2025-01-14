@@ -21,7 +21,7 @@ async function Exercise({ params }: { params: { id: string } }) {
     } },
   });
   if (!topic) throw "Topic not found";
-  return <ExerciseUI topic={topic}></ExerciseUI>;
+  return <ExerciseUI topicFromSSR={topic}></ExerciseUI>;
 }
 
 export default Exercise;
