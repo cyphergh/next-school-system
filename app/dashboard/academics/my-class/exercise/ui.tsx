@@ -94,6 +94,9 @@ function ExerciseUI({
               <div className="font-bold font-mono">
                 {exercise.createdAt.toLocaleTimeString("en-US")}
               </div>
+              {
+                
+              }
               {exercise.type == "OFFLINE" && (
                 <div className="flex flex-row justify-end">
                   <RecordExerciseCard setTopic={setTopic} exercise={exercise}></RecordExerciseCard>

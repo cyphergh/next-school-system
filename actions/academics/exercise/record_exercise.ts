@@ -114,3 +114,30 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
     return {error:true,errorMessage:error.toString()}
  }
 }
+
+
+
+export async function GetTopic(id:string){
+ try {
+    const session = await getSession();
+    if (!session.isLoggedIn || !session.userId)
+      return { error: true, errorMessage: "Refresh page" };
+    const user = await prisma.staff.findFirst({
+      where: {
+        userId: session.userId,
+      },
+    });
+    if (!user) return { error: true, errorMessage: "Permission Denied" };
+    if (await IsAccountActive(session.userId))
+      return { error: true, errorMessage: "Account suspended" };
+    setLastSeen(session.userId);
+    const term = await prisma.term.findFirst({
+      where: {
+        isActve: true,
+      },
+    });
+    if (!term) throw "No Active Term";
+ } catch (error:any) {
+    
+ }
+}
