@@ -43,14 +43,6 @@ function ClassManagementPage({
         });
       setStaff([]);
       setStaff([...res.staffs!]);
-      setStages([{
-        className:"dddddmv",
-        id:"ddd",
-        formMaster:null,
-        classPrefect:null,
-        createdAt:new Date(Date.now()),
-        updatedAt:new Date(Date.now()),
-      }]);
       setStages([...res.classes!]);
     } catch (error) {
       setIsRefreshing(false);

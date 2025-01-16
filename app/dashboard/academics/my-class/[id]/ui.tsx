@@ -162,6 +162,15 @@ function UI({
                     <div>{t.exercises.length}</div>
                   </div>
                   </Link>
+                  <Link
+                    href={`./assignment/${t.id}`}
+                    className="cursor-pointer hover:border hover:border-blue-500 border p-2  rounded-md hover:ml-2"
+                  >
+                    <div className="flex flex-row justify-between p-2 border">
+                    <div>Assignment</div>
+                    <div>{t.assignment.length}</div>
+                  </div>
+                  </Link>
 
                  
                 </div>

@@ -4,6 +4,7 @@ import { IsAccountActive } from "@/actions/account-active";
 import { setLastSeen } from "@/actions/auth/setLastSeen";
 import { getSession } from "@/actions/session";
 import prisma from "@/prisma/db";
+import { Prisma } from "@prisma/client";
 
 export async function RecordExercise({exerciseId,soeId,score,studentId}:{
     exerciseId:string,
@@ -64,7 +65,7 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
                 }
             },
             update:{
-
+                updatedAt:new Date(Date.now())
             },
             create:{
                 studentId:student.id,
@@ -77,6 +78,7 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
         }else{
             isNew=true;
         }
+        console.log(isNew,"Welcome")
         const isRecorded = await db.assessmentScore.upsert({
             where:{
               studentId_submissionId:{
@@ -87,6 +89,7 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
             update:{
                 score,
                 maxScore:exercise.totalScore,
+                updatedAt:new Date(Date.now())
             },
             create:{
                 maxScore:exercise.totalScore,
@@ -117,7 +120,16 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
 
 
 
-export async function GetTopic(id:string){
+export async function GetTopic(id:string):Promise<{
+  error:boolean,
+  errorMessage:string,
+  topic?: Prisma.TopicGetPayload<{
+    include: {
+      subject: true;
+      exercises: true;
+    };
+  }>
+}>{
  try {
     const session = await getSession();
     if (!session.isLoggedIn || !session.userId)
@@ -137,7 +149,17 @@ export async function GetTopic(id:string){
       },
     });
     if (!term) throw "No Active Term";
+    const topic = await prisma.topic.findUnique({
+      where: { id: id,termId:term.id },
+      include: { subject: true, exercises: {
+        orderBy:{
+          createdAt:'desc'
+        }
+      } },
+    });
+    if (!topic) throw "Topic not found";
+    return {error:false,errorMessage:'',topic}
  } catch (error:any) {
-    
+    return {error:true,errorMessage:error.toString()}
  }
 }
