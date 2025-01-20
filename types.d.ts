@@ -467,5 +467,64 @@ type NewExerciseResponse  = {
   error:boolean;
   errorMessage:string;
   exercises?:Exercise[];
+}
+type NewAssignmentResponse  = {
+  error:boolean;
+  errorMessage:string;
+  assignments?:Exercise[];
+}
 
+type StudentInfoData  = Prisma.StudentGetPayload<{
+  include: {
+    mother: true;
+    father: true;
+    class: {
+      include: {
+        formMaster: true;
+      };
+    };
+    transactions: {
+      take: 10;
+      orderBy: {
+        createdAt: "desc";
+      };
+    };
+    images: {
+      take: 1;
+    };
+    activities: {
+      take: 10;
+
+      orderBy: {
+        createdAt: "desc";
+      };
+    };
+    submissions: {
+      include: {
+        exercise: true;
+        assessmentScore: {};
+      };
+      take: 10;
+      orderBy: {
+        createdAt: "desc";
+      };
+    };
+  };
+}>;
+
+type CFADATA = {
+  staffId: string;
+  _sum: {
+    amount: number|null; // Sum of amounts, can be null if no matching records
+  };
+  user: Staff|null
+}[];
+
+type CFAEXPENSES = {
+  expenses: {
+    staffId: string;
+    _sum: {
+      amount: number|null;
+    };
+  };
 }

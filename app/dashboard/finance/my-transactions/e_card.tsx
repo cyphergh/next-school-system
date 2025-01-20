@@ -75,33 +75,40 @@ function ECard({
             Time <div>{t.createdAt.toLocaleTimeString("en-GB")}</div>
           </div>
         </div>
-        {!t.cancelationRequestId&&
+        {!t.cancelationRequestId && (
           <div
-          className={`w-[30px] h-[30px] rounded-full ${
-            t.approved  ? "bg-green-500" : "bg-red-500"
-          }`}
-        ></div>
-        }
-      </div>
-      <div className="p-3 w-full ">
-        {t.cancelationRequestId ? (
-          <div className="flex text-center gap-x-2 w-full items-center font-bold">
-            Cancelation request sent{" "}
-            <Button className="flex-1 flex gap-x-1 items-center" disabled={revoking} onClick={revoke}>
-              Revoke {revoking && <Circles width={20} color="white"></Circles>}
-            </Button>{" "}
-          </div>
-        ) : (
-          <Button
-            className="w-full flex gap-x-2 items-center"
-            disabled={canceling}
-            onClick={cancel}
-          >
-            Send cancelation request{" "}
-            {canceling && <Circles width={20} color="white"></Circles>}
-          </Button>
+            className={`w-[30px] h-[30px] rounded-full ${
+              t.approved ? "bg-green-500" : "bg-red-500"
+            }`}
+          ></div>
         )}
       </div>
+      {!t.approved && (
+        <div className="p-3 w-full ">
+          {t.cancelationRequestId ? (
+            <div className="flex text-center gap-x-2 w-full items-center font-bold">
+              Cancellation request sent{" "}
+              <Button
+                className="flex-1 flex gap-x-1 items-center"
+                disabled={revoking}
+                onClick={revoke}
+              >
+                Revoke{" "}
+                {revoking && <Circles width={20} color="white"></Circles>}
+              </Button>{" "}
+            </div>
+          ) : (
+            <Button
+              className="w-full flex gap-x-2 items-center"
+              disabled={canceling}
+              onClick={cancel}
+            >
+              Send cancellation request{" "}
+              {canceling && <Circles width={20} color="white"></Circles>}
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

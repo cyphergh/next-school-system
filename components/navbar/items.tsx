@@ -1,6 +1,6 @@
 import { NavItem } from "@/types";
 import React from "react";
-import { MdOutlineDashboard } from "react-icons/md";
+import { MdAccountCircle, MdOutlineDashboard } from "react-icons/md";
 import { PiChalkboardTeacherLight, PiContactlessPaymentLight, PiTestTube } from "react-icons/pi";
 import { FaRegAddressCard } from "react-icons/fa";
 import { MdGroups } from "react-icons/md";
@@ -9,7 +9,7 @@ import { PiStudent } from "react-icons/pi";
 import { CiBank, CiMoneyBill } from "react-icons/ci";
 import { SiMicrosoftacademic } from "react-icons/si";
 import { IoListCircle, IoNotificationsOutline } from "react-icons/io5";
-import { TbHistory, TbMessage2 } from "react-icons/tb";
+import { TbCashBanknote, TbHistory, TbMessage2 } from "react-icons/tb";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { SiGoogleclassroom } from "react-icons/si";
 import { CgEventbrite } from "react-icons/cg";
@@ -136,7 +136,6 @@ const navItems: NavItem[] = [
         title: "ViewTransaction",
         value: false,
       },
-      
       {
         title: "CreateBill",
         value: false,
@@ -225,6 +224,18 @@ const navItems: NavItem[] = [
         permission: [
           {
             title: "MakePayment",
+            value:true
+          }
+        ],
+      },
+      {
+        link: "/dashboard/finance/cfa",
+        hasSubMenu: false,
+        title: "CFA",
+        image: <TbCashBanknote   size={35} />        ,
+        permission: [
+          {
+            title: "SUPERADMIN",
             value:true
           }
         ],

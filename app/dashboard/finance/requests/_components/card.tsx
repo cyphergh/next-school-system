@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { CompleteFinancialRequest } from "@/types";
 import { set } from "date-fns";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { InfinitySpin } from "react-loader-spinner";
 
 export function TCR({
@@ -27,11 +27,12 @@ export function TCR({
   const [openDeclined, setOpenDeclined] = React.useState(false);
   const [openAccept, setOpenAccept] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [password,setPassword] = React.useState("");
   const { toast } = useToast();
   const declined = async () => {
     try {
       setLoading(true);
-      const res = await DeclinedRequest(request.id);
+      const res = await DeclinedRequest(request.id,password);
       setLoading(false);
       if (res.error)
         return toast({ title: res.errorMessage, variant: "destructive" });
@@ -45,11 +46,12 @@ export function TCR({
   const accept = async () => {
     try {
       setLoading(true);
-      const res = await AcceptRequest(request.id);
+      const res = await AcceptRequest(request.id,password);
       setLoading(false);
       if (res.error)
         return toast({ title: res.errorMessage, variant: "destructive" });
       if (res.requests) setRequest(res.requests);
+      setPassword("");
       setOpenDeclined(false);
     } catch (err) {
       setLoading(false);
@@ -114,7 +116,7 @@ export function TCR({
               <p>
                 <b>NB:</b> This action can&apos;t be revoke
               </p>
-              <Input placeholder="Enter Your Password" type="password"></Input>
+              <Input value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Your Password" type="password"></Input>
               <AlertDialogFooter>
                 <Button onClick={declined}>Declined</Button>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -137,7 +139,7 @@ export function TCR({
               <p>
                 <b>NB:</b> This action can&apos;t be revoke
               </p>
-              <Input placeholder="Enter Your Password" type="password"></Input>
+              <Input value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Your Password" type="password"></Input>
               <AlertDialogFooter>
                 <Button onClick={accept}>Accept</Button>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -160,13 +162,14 @@ export default function ECR({
   const [openDeclined, setOpenDeclined] = React.useState(false);
   const [openAccept, setOpenAccept] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [password,setPassword] = useState("");
   const { toast } = useToast();
   const declined = async () => {
     try {
       setLoading(true);
       
       alert(request.id)
-      const res = await DeclinedRequest(request.id);
+      const res = await DeclinedRequest(request.id,password);
       setLoading(false);
       if (res.error)
         return toast({ title: res.errorMessage, variant: "destructive" });
@@ -180,7 +183,7 @@ export default function ECR({
   const accept = async () => {
     try {
       setLoading(true);
-      const res = await AcceptRequest(request.id);
+      const res = await AcceptRequest(request.id,password);
       setLoading(false);
       if (res.error)
         return toast({ title: res.errorMessage, variant: "destructive" });
@@ -247,7 +250,7 @@ export default function ECR({
               <p>
                 <b>NB:</b> This action can&apos;t be revoke
               </p>
-              <Input placeholder="Enter Your Password" type="password"></Input>
+              <Input value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Your Password" type="password"></Input>
               <AlertDialogFooter>
                 <Button onClick={declined}>Declined</Button>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -270,7 +273,7 @@ export default function ECR({
               <p>
                 <b>NB:</b> This action can&apos;t be revoke
               </p>
-              <Input placeholder="Enter Your Password" type="password"></Input>
+              <Input value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter Your Password" type="password"></Input>
               <AlertDialogFooter>
                 <Button onClick={accept}>Accept</Button>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>

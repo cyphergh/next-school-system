@@ -71,12 +71,14 @@ function UI() {
         recipientPhoneNumber: phoneNumber,
         password,
       });
-      if (res.error)
+      if (res.error){
+        setLoading(false);
         return toast({
           title: res.errorMessage,
           description: "Please try again",
           variant: "destructive",
         });
+      }
       toast({
         title: "Success",
         description: "Expenditure added successfully",

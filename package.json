@@ -41,6 +41,7 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@types/bcrypt": "^5.0.2",
+    "@types/react-qr-reader": "^2.1.7",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.3",
     "bcrypt": "^5.1.1",

@@ -6,10 +6,7 @@ import { Metadata } from "next";
 import Logo from "@/public/logo.png";
 import Image from "next/image";
 import NavBar from '@/app/(main)/navbar';
-type Props = {
-    params: { classId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
-  };
+
 async function ClassPage( { params }: { params: { classId: string } }) {
 const session = await getSession();
 const subjects = await prisma.subject.findMany({

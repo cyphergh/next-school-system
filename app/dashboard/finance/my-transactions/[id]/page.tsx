@@ -69,18 +69,21 @@ export default async function Page({ params }: { params: { id: string } }) {
   if (!transaction) return notFound();
   return (
     <div className="p-6  flex-1 overflow-y-scroll ">
-      <div className="flex flex-col justify-between items-start">
+      <div className="flex flex-col justify-between items-start w-full">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
           Transaction Details
         </h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          ID: {transaction.id}
+        </p>
         <p className="text-gray-600 dark:text-gray-400">
           Date: {transaction.createdAt.toLocaleDateString()}
         </p>
         <p className="text-gray-600 dark:text-gray-400">
           Time: {transaction.createdAt.toLocaleTimeString()}
         </p>
-        <p className="text-gray-600 dark:text-gray-400 text-lg">
-          <b>Amount</b>: GH&#8373;{transaction.amount}
+        <p className="text-red-400 text-lg">
+          <b>Amount</b>: GH&#8373; {transaction.amount.toFixed(2)}
         </p>
       </div>
       {transaction.transactionType === "PAYMENT" && (
@@ -92,7 +95,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       )}
       
       {/* Transaction Information */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-1 gap-4 w-full">
         {transaction.transactionType === "PAYMENT" && (
           <div>
             <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
@@ -137,6 +140,8 @@ export default async function Page({ params }: { params: { id: string } }) {
           </div>
         )}
 
+
+
         {transaction.Mother && (
           <div>
             <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
@@ -166,11 +171,9 @@ export default async function Page({ params }: { params: { id: string } }) {
             </p>
           </div>
         )}
-      </div>
 
-      {/* Bill Information */}
-      {transaction.bill && (
-        <div className="mt-6">
+{transaction.bill && (
+        <div className="">
           <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
             Bill Information
           </h3>
@@ -183,46 +186,52 @@ export default async function Page({ params }: { params: { id: string } }) {
           <p className="text-gray-600 dark:text-gray-400">
             Payed Amount: &#8373;{transaction.bill?.payedAmount}
           </p>
-          <div className="mt-4 overflow-x-scroll">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-100 dark:bg-gray-800">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Item
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Quantity
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
-                {transaction.bill?.items.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      {item.title}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      {item.quantity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      &#8373;{item.amount}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
-                      &#8373;{(item.amount * item.quantity).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          
         </div>
       )}
+      </div>
+
+      {/* Bill Information */}
+      {
+        transaction.bill && <div className="mt-4 overflow-x-scroll w-full">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-100 dark:bg-gray-800">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Item
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Quantity
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Amount
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+            {transaction.bill?.items.map((item) => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                  {item.title}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                  {item.quantity}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                  &#8373;{item.amount}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
+                  &#8373;{(item.amount * item.quantity).toFixed(2)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      }
 
       {/* EDBill Information */}
       {transaction.edBill && (

@@ -86,7 +86,7 @@ export async function Payment({
       });
       if (!bill) return { error: true, errorMessage: "Invalid bill reference" };
       if(bill.amount<=bill.payedAmount) return { error: true, errorMessage: "The provided bill reference is settled" };
-      if(bill.amount<=(bill.payedAmount+parseInt(amount))) return { error: true, errorMessage: `You are overpaying, the required amount is ${bill.amount-bill.payedAmount}` };
+      if(bill.amount<(bill.payedAmount+parseInt(amount))) return { error: true, errorMessage: `You are overpaying, the required amount is ${bill.amount-bill.payedAmount}` };
       
     }
     const paymentAmount: number = parseFloat(amount);

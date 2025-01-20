@@ -14,6 +14,7 @@ import React, { useState } from "react";
 import InfoTab from "./info-tab/tab";
 import { QrScan } from 'pastel-qr-scan';
 import TransactionsTab from "./transactions-tab/tab";
+import Link from "next/link";
 
 function StudentMiniInfo({ student }: { student: StInfo }) {
   const [show, setShow] = useState(false);
@@ -21,10 +22,12 @@ function StudentMiniInfo({ student }: { student: StInfo }) {
   return (
     <>
       <Card
-        onClick={() => setShow(true)}
+        // TODO Remove to activate dialog info
+        // onClick={() => setShow(true)}
         title={student.firstName}
-        className="flex shadow-sm gap-x-3 p-4 w-full cursor-pointer items-center"
-      >
+        className="flex shadow-sm gap-x-3 p-4 w-full cursor-pointer items-center hover: border-2 hover:border-blue-200 "
+        >
+        <Link href={"./student-info/"+student.id} className="flex shadow-sm gap-x-3 p-4 w-full cursor-pointer items-center">
         <Avatar className="w-[120px] h-[120px] cursor-pointer dark:text-white text-black font-normal text-3xl">
           <AvatarImage
             src={`${process.env.NEXT_PUBLIC_DOMAIN}/api/image/${student?.images[0]?.id}`}
@@ -43,6 +46,7 @@ function StudentMiniInfo({ student }: { student: StInfo }) {
           <div className="uppercase">{student.type}</div>
           <div className="">{student.address}</div>
         </div>
+        </Link>
       </Card>
       <AlertDialog open={show} onOpenChange={setShow}>
         <AlertDialogContent className="h-[90%] w-[90%] max-w-[100%] flex flex-col rounded-md overflow-y-hidden">
@@ -79,7 +83,7 @@ function StudentMiniInfo({ student }: { student: StInfo }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+      </>
   );
 }
 

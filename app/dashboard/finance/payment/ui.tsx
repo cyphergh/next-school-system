@@ -326,7 +326,7 @@ function PaymentPage({ st,ts }: { st: StInfo[],ts:CompleteTransactionType[]  }) 
               </AlertDialogContent>
             )}
           </AlertDialog>
-          <Card className="p-4 w-full lg:w-[400px] max-w-full flex flex-col items-center sm:w-[48%]">
+          <Card className="p-4 w-full lg:w-[300px] max-w-full flex flex-col items-center sm:w-[48%]">
             <h1>Student Information</h1>
             <div className="p-3 h-auto flex flex-col gap-y-3 w-full">
               <Input
@@ -348,7 +348,7 @@ function PaymentPage({ st,ts }: { st: StInfo[],ts:CompleteTransactionType[]  }) 
             </div>
           </Card>
           {studentId && (
-            <Card className="p-4 w-full lg:w-[400px] max-w-full flex flex-col items-center sm:w-[48%]">
+            <Card className="p-4 w-full lg:w-[300px] max-w-full flex flex-col items-center sm:w-[48%]">
               <h1>Selected Student</h1>
               {
                 <div className="p-3 h-auto flex flex-col gap-y-3 w-full items-center">
@@ -382,7 +382,7 @@ function PaymentPage({ st,ts }: { st: StInfo[],ts:CompleteTransactionType[]  }) 
               }
             </Card>
           )}
-          <Card className="p-4 w-full lg:w-[400px] sm:w-[48%] max-w-full flex flex-col items-center gap-y-2">
+          <Card className="p-4 w-full lg:w-[300px] sm:w-[48%] max-w-full flex flex-col items-center gap-y-2">
             <h1>Payer Information</h1>
             <div
               className={`p-3 h-auto flex flex-col gap-y-3 w-full ${
@@ -444,7 +444,7 @@ function PaymentPage({ st,ts }: { st: StInfo[],ts:CompleteTransactionType[]  }) 
               </div>
             </div>
           </Card>
-          <Card className="p-4 w-full lg:w-[400px] max-w-full flex flex-col items-center sm:w-[48%]">
+          <Card className="p-4 w-full lg:w-[300px] max-w-full flex flex-col items-center sm:w-[48%]">
             <h1>Payment Details</h1>
             <div className="p-3 h-auto flex flex-col gap-y-3 w-full">
               <Input

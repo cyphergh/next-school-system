@@ -6,9 +6,11 @@ import { IsAccountActive } from "../account-active";
 import { setLastSeen } from "../auth/setLastSeen";
 
 import { FinancialRequestResponse } from "@/types";
+import bcrypt from "bcrypt";
 
 export async function AcceptRequest(
-  requestId: string
+  requestId: string,
+  password: string,
 ): Promise<FinancialRequestResponse> {
   try {
     const session = await getSession();
@@ -16,6 +18,9 @@ export async function AcceptRequest(
       return { error: true, errorMessage: "Error occurred" };
     const user = await prisma.staff.findFirst({
       where: { userId: session.userId },
+      include:{
+        user:true
+      }
     });
     if (!user) return { error: true, errorMessage: "Error occurred" };
     if (await IsAccountActive(session.userId))
@@ -27,6 +32,8 @@ export async function AcceptRequest(
       },
     });
     if (!term) throw new Error("Create a new term first");
+    const valid = bcrypt.compareSync(password, user.user?.password??"");
+    if (!valid) return { error: true, errorMessage: "Wrong password" };
     const isSuperAdmin = await prisma.permission.findFirst({
       where: {
         staffId: user.id,

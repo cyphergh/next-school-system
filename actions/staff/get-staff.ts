@@ -8,7 +8,6 @@ import { cookies } from "next/headers";
 
 export async function FindAllStaff(): Promise<TFIndAllStaff> {
   try {
-    const _cookies = cookies()
     const session = await getSession();
     if (!session.isLoggedIn || !session.userId)
       return { error: true, errorMessage: "Refresh page" };

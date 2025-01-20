@@ -5,9 +5,11 @@ import { getSession } from "../session";
 import prisma from "@/prisma/db";
 import { IsAccountActive } from "../account-active";
 import { setLastSeen } from "../auth/setLastSeen";
+import bcrypt from "bcrypt";
 
 export async function DeclinedRequest(
-  requestId: string
+  requestId: string,
+  password:string,
 ): Promise<FinancialRequestResponse> {
   try {
     const session = await getSession();
@@ -15,6 +17,9 @@ export async function DeclinedRequest(
       return { error: true, errorMessage: "Error occurred" };
     const user = await prisma.staff.findFirst({
       where: { userId: session.userId },
+      include:{
+        user:true
+      }
     });
     if (!user) return { error: true, errorMessage: "Error occurred" };
     if (await IsAccountActive(session.userId))
@@ -26,6 +31,9 @@ export async function DeclinedRequest(
       },
     });
     if (!term) throw new Error("Create a new term first");
+    const valid = bcrypt.compareSync(password, user.user?.password??"");
+    console.log(password,user.user?.password)
+    if (!valid) return { error: true, errorMessage: "Wrong password" };
     const isSuperAdmin = await prisma.permission.findFirst({
       where: {
         staffId: user.id,
@@ -80,7 +88,7 @@ export async function DeclinedRequest(
       },
     });
     return { error: false, errorMessage: "", requests };
-  } catch (error) {
-    return { error: true, errorMessage: "Server error" };
+  } catch (error:any) {
+    return { error: true, errorMessage: error.toString() };
   }
 }

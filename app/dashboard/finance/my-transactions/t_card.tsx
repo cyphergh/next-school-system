@@ -73,19 +73,19 @@ function TCard({
         <TransactionCard transaction={t}></TransactionCard>
       </Link>
       <div className="p-3 w-full">
-        {!t.cancelationRequest && (
+        {!t.cancelationRequest && t.status !="APPROVED" && (
           <Button
             onClick={cancel}
             disabled={cancelling}
             className="w-full flex gap-x-4"
           >
-            {!cancelling ? "Send cancelation request" : "Cancelling"}{" "}
+            {!cancelling ? "Send cancellation request" : "Cancelling"}{" "}
             {cancelling && <Circles width={20} color="white"></Circles>}
           </Button>
         )}
         
-        {t.cancelationRequest && !t.cancelationRequest.granted && <div className="w-full text-center font-bold flex gap-x-2 items-center justify-center">Cancelation Request Sent <Button disabled={revoking} onClick={revoke}>revoke {revoking && <Circles width={20} color="white"></Circles>}</Button></div>}
-        {t.cancelationRequest && t.cancelationRequest.granted && <div className="w-full text-center font-bold text-muted-foreground">Canceled</div>}
+        { t.cancelationRequest && !t.cancelationRequest.granted && <div className="w-full text-center font-bold flex gap-x-2 items-center justify-center">Cancellation Request Sent <Button disabled={revoking} onClick={revoke}>revoke {revoking && <Circles width={20} color="white"></Circles>}</Button></div>}
+        { t.cancelationRequest && t.cancelationRequest.granted && <div className="w-full text-center font-bold text-muted-foreground">Canceled</div>}
       </div>
     </div>
   );

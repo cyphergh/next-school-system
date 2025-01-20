@@ -30,6 +30,7 @@ export async function RequestExpenditureCancelation(
       },
     });
     if (!term) throw new Error("Create a new term first");
+    
     const isSuperAdmin = await prisma.permission.findFirst({
       where: {
         staffId: user.id,
