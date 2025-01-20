@@ -597,6 +597,7 @@ function UI({
           {data.transactions.map((transaction) => {
             return (
               <div
+               key={transaction.id}
                 className="border p-3 w-full md:w-[400px] rounded-md flex flex-col "
               >
                 <div className="flex flex-col gap-2 w-full">

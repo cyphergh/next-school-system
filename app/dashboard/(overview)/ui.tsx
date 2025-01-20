@@ -10,7 +10,9 @@ import { FaBook } from "react-icons/fa";
 function UI({
   subjects,
   transactions,
+  isAdmin,
 }: {
+  isAdmin:boolean,
   transactions:Transaction[],
   subjects: Prisma.SubjectGetPayload<{
     include: {
@@ -29,7 +31,7 @@ function UI({
         <Card className="p-4 flex flex-col md:flex-row gap-2">
           <div className="font-bold text-indigo-600">Quick Links</div>
           <div className="ml-8">
-            <Link href={"dashboard/academics/class"}>My Subjects</Link>
+            <Link href={"dashboard/academics/my-class"}>My Subjects</Link>
           </div>
           <div className="ml-8">
             <Link href={"dashboard/finance/my-transactions"}>
@@ -43,6 +45,14 @@ function UI({
             <Link href={"dashboard/student/enrollment"}>Students</Link>
           </div>
         </Card>
+        {isAdmin && (
+          <div className="w-full flex flex-row flex-wrap p-3 gap-3">
+            <div className="p-5  w-full flex gap-x-3 items-center">
+              <div className="font-bold text-xl">Attendance Statistics</div>
+            </div>
+            
+          </div>
+        )}
         {subjects.length > 0 && (
           <div className="w-full flex flex-row flex-wrap p-3 gap-3">
             <div className="p-5  w-full flex gap-x-3 items-center">
@@ -95,7 +105,7 @@ function UI({
               })}
           </div>
         )}
-        <div className="w-full flex flex-row flex-wrap p-3 gap-3">
+        {transactions.length>0&& <div className="w-full flex flex-row flex-wrap p-3 gap-3">
           <div className="p-5 font-bold text-xl w-full">
             Recent Transactions
           </div>
@@ -113,7 +123,7 @@ function UI({
                 </div>
             })
           }
-        </div>
+        </div>}
       </div>
     </>
   );

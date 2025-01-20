@@ -52,7 +52,7 @@ async function Dashboard() {
     },
     take:10,
   });
-  return <UI subjects={subjects} transactions={transactions}></UI>;
+  return <UI subjects={subjects} isAdmin={user.role=="ADMIN"} transactions={transactions}></UI>;
 }
 
 export default Dashboard;
