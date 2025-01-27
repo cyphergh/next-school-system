@@ -28,7 +28,8 @@ async function Page(
       createdAt: "desc",
     },
     where:{
-        subjectId:params.id
+        subjectId:params.id,
+        termId:term.id,
     },
     include:{
       notes:true,

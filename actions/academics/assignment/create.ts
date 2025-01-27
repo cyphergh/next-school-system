@@ -80,6 +80,7 @@ export async function CreateAssignment({
                 data:{
                     text: question.question,
                     type:question.type,
+                    mark:question.mark,
                     assignmentId:assignment.id,
                     options:{
                         createMany:{
@@ -88,6 +89,7 @@ export async function CreateAssignment({
                                     return  {
                                         isCorrect:e.isAnswer,
                                         text:e.option,
+                                        
                                     }
                                 })
                             ],
@@ -109,6 +111,7 @@ export async function CreateAssignment({
             ...stage.students.map((student)=>{
                 return {
                     assignedBy:user.id,
+                    termId:term.id,
                     assignmentId:assignment.id,
                     studentId:student.id,
                     submitted:false

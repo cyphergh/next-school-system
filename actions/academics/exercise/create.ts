@@ -72,12 +72,14 @@ export async function CreateExercise({
                 subjectId:subject.id,
                 termId:term.id,
                 topicId,
+                
             }
         });
         for(let i=0;i<questions.length;i++){
             const question = questions[i];
             await db.question.create({
                 data:{
+                    mark:question.mark,
                     text: question.question,
                     type:question.type,
                     exerciseId:exercise.id,
@@ -105,13 +107,14 @@ export async function CreateExercise({
       if(!stage.students.length) throw `No student in ${stage.className.toUpperCase()}`
       await db.studentsOnExercise.createMany({
         data:[
-            
             ...stage.students.map((student)=>{
                 return {
                     assignedBy:user.id,
+                    termId:term.id,
                     exerciseId:exercise.id,
                     studentId:student.id,
-                    submitted:false
+                    submitted:false,
+                    
                 }
             })
         ]

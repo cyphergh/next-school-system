@@ -151,7 +151,6 @@ model User {
   staff                   Staff?
   mother                  Mother?
   father                  Father?
-
   @@index([id])
   @@index([id, email])
 }
@@ -541,6 +540,8 @@ model Exercise {
 model StudentsOnExercise {
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId String
+  termId     String?
+  term       Term? @relation(fields: [termId],references: [id])
   submitted  Boolean @default(false)
   student    Student  @relation(fields: [studentId], references: [id])
   studentId  String
@@ -564,6 +565,8 @@ model StudentOnProjectWork {
 }
 
 model StudentOnAssignment {
+  termId     String?
+  term       Term? @relation(fields: [termId],references: [id])
   assignment   Assignment @relation(fields: [assignmentId], references: [id])
   assignmentId String
   student      Student    @relation(fields: [studentId], references: [id])
@@ -723,6 +726,7 @@ model AssessmentScore {
 model Submission {
   id              String           @id @default(cuid())
   assessmentScore AssessmentScore?
+  answers         String @default("[]")
   assignment      Assignment?       @relation(fields: [assignmentId], references: [id])
   assignmentId    String?
   exercise        Exercise?         @relation(fields: [exerciseId], references: [id])
@@ -760,6 +764,7 @@ model Question {
   id            String           @id @default(cuid())
   text          String // The text of the question
   type          QuestionType 
+  mark          Float 
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
   exercise      Exercise?         @relation(fields: [exerciseId], references: [id])
@@ -884,6 +889,8 @@ model Term {
   topics       Topic[]
   releasedExams ReleaseExams[]
   assessments  AssessmentScore[]
+  soe    StudentsOnExercise[]
+  soa    StudentOnAssignment[]
 }
 
 model ReleaseExams {
@@ -895,6 +902,7 @@ model ReleaseExams {
     grade       Int?
     position    Int?
     totalScore  Int
+    totalStudents Int @default(9)
     studentId   String
     student Student @relation(fields: [studentId],references: [id])
     examId      String

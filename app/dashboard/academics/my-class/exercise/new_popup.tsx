@@ -299,7 +299,7 @@ function NewExercisePopup({subjectId,topicId,setExercises}:{subjectId:string,top
                   <SelectItem value={"MULTIPLE_CHOICE"}>
                     Multi Choice
                   </SelectItem>
-                  <SelectItem value="TRUE_FALSE">True/False</SelectItem>
+                  {/* <SelectItem value="TRUE_FALSE">True/False</SelectItem> */}
                   {/* <SelectItem value="LONG_ANSWER">Text</SelectItem> */}
                 </SelectGroup>
               </SelectContent>

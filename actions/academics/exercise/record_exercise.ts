@@ -57,22 +57,22 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
     if(!studentOnExercise) throw "Exercise was not assigned to this student";
     await prisma.$transaction(async(db)=>{
         let isNew:boolean;
-        const submission = await db.submission.upsert({
-            where:{
-                studentId_exerciseId:{
-                    studentId:student.id,
-                    exerciseId:exercise.id,
-                }
-            },
-            update:{
-                updatedAt:new Date(Date.now())
-            },
-            create:{
-                studentId:student.id,
-                exerciseId:exercise.id,
-                termId:term.id,
-            },
-        })
+          const submission = await db.submission.upsert({
+              where:{
+                  studentId_exerciseId:{
+                      studentId:student.id,
+                      exerciseId:exercise.id,
+                  }
+              },
+              update:{
+                  updatedAt:new Date(Date.now())
+              },
+              create:{
+                  studentId:student.id,
+                  exerciseId:exercise.id,
+                  termId:term.id,
+              },
+          })
         if(submission.createdAt.toString() != submission.updatedAt.toString()){
             isNew=false;
         }else{
@@ -111,6 +111,17 @@ export async function RecordExercise({exerciseId,soeId,score,studentId}:{
                 }
             })
         }
+        await prisma.studentsOnExercise.update({
+            where:{
+                studentId_exerciseId:{
+                  exerciseId:exercise.id,
+                  studentId:student.id
+                }
+            },
+            data:{
+                submitted:true
+            }
+        })
     })
     return {error:false,errorMessage:''}
  } catch (error:any) {

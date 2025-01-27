@@ -112,7 +112,6 @@ export async function PrintReport(
                         examId:examId,
                     },
                     include: {
-                        
                         exams: {
                           include: {
                             records: {

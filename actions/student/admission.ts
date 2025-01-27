@@ -244,6 +244,7 @@ export async function CreateNewStudent(
           lastSeen: new Date(Date.now()),
           password: bcrypt.hashSync(data.mothersPhone, bcrypt.genSaltSync(10)),
           active: true,
+          
         },
       });
       await prisma.student.update({

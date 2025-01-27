@@ -341,7 +341,7 @@ function PrintDialog({
                       className="w-[100px] h-[100px]"
                       value={
                         process.env.NEXT_PUBLIC_DOMAIN +
-                        "/exams-report/" +
+                        "/student/report" +
                         exam.id
                       }
                     ></QRCode>

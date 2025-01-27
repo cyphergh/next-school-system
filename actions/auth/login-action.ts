@@ -32,9 +32,9 @@ export async function LoginServerAction(
       where: {
         OR: [
           {
-            id: isNaN(parseInt(form_data.userId))
+            id: isNaN(parseInt(form_data.userId.toUpperCase().replaceAll(process.env.NEXT_PUBLIC_SCHOOL_SHORT!,"").trim()))
               ? 0
-              : parseInt(form_data.userId),
+              : parseInt(form_data.userId.toUpperCase().replaceAll(process.env.NEXT_PUBLIC_SCHOOL_SHORT!,"").trim()),
           },
           {
             email: form_data.userId,
@@ -46,12 +46,12 @@ export async function LoginServerAction(
       },
     });
     if (!user) return { error: true, errorMessage: "Wrong user or password" };
+    console.log(user);
     if(!user.active) return { error: true, errorMessage: "Account suspended" };
-    if (user.password == "")
-      return { error: true, errorMessage: "Finish account setup" };
-    if (!(await bcrypt.compare(form_data.password, user.password)))
-      return { error: true, errorMessage: "Wrong user or password" };
-    
+    if (user.password != ""){
+      if (!(await bcrypt.compare(form_data.password, user.password)))    
+        return { error: true, errorMessage: "Wrong userId or password" };
+      }
     if (user.account == "STAFF") {
       const userDetails = await prisma.staff.findUnique({
         where: {

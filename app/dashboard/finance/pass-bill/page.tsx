@@ -7,7 +7,7 @@ const res = await GetStudentsInfo();
 if(res.error) throw Error(res.errorMessage);
 if(!res.students) throw Error("No students found");
   return (
-    <PassBillUI st={res.students}></PassBillUI>
+    <PassBillUI st={res.students.filter((e)=>!e.stopped)}></PassBillUI>
   )
 }
 
